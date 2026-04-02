@@ -32,3 +32,5 @@ ROOT/
 ​GPS Logic: navigator.geolocation Web API
 ​WARNING: Unauthorized access to the core database is strictly monitored. Ensure GPS is synced before attempting to log clinical visits for data integrity.
 ​"The code is the law."
+❎️ And  its for Profesional  work ⚠️only 
+ 
