@@ -1,25 +1,28 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arundeep Doctor Tracker Pro | Secure Access</title>
+    <title>Arundeep Doctor Tracker Pro | Neural Link</title>
     <style>
         :root {
             --primary: #00ff41; 
-            --bg-dark: #0a0a0a;
-            --danger: #ff003c;
-            --warning: #f39c12;
+            --bg-dark: #050505;
+            --card-bg: rgba(20, 20, 20, 0.95);
+            --accent: #008f11;
+            --text-gray: #888;
         }
 
+        * { box-sizing: border-box; }
+
         body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow-x: hidden;
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
             font-family: 'Courier New', Courier, monospace;
             background-color: var(--bg-dark);
+            color: var(--primary);
+            overflow-x: hidden;
         }
 
         /* --- MATRIX BACKGROUND --- */
@@ -27,7 +30,7 @@
             position: fixed;
             top: 0; left: 0;
             z-index: -1;
-            opacity: 0.3;
+            opacity: 0.2;
         }
 
         /* --- LOGIN PAGE --- */
@@ -36,142 +39,123 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: radial-gradient(circle, rgba(0,255,65,0.05) 0%, rgba(0,0,0,1) 80%);
+            transition: 1s ease-in-out;
         }
 
         .hacker-container {
             width: 90%;
             max-width: 400px;
-            background: rgba(0, 0, 0, 0.85);
+            background: var(--card-bg);
             border: 1px solid var(--primary);
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.1);
             padding: 30px;
-            border-radius: 5px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hacker-container::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 2px;
-            background: var(--primary);
-            animation: scan 3s linear infinite;
-        }
-
-        @keyframes scan {
-            0% { top: 0; }
-            100% { top: 100%; }
-        }
-
-        .terminal-header {
-            color: var(--primary);
             text-align: center;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--primary);
-            padding-bottom: 10px;
-            font-size: 14px;
-            letter-spacing: 2px;
-        }
-
-        .input-group {
-            margin-bottom: 15px;
             position: relative;
-        }
-
-        .input-group label {
-            display: block;
-            color: var(--primary);
-            font-size: 10px;
-            margin-bottom: 5px;
-            text-transform: uppercase;
         }
 
         .hacker-input {
             width: 100%;
             background: transparent;
-            border: 1px solid rgba(0, 255, 65, 0.3);
-            padding: 12px;
+            border: 1px solid var(--accent);
+            padding: 15px;
             color: var(--primary);
-            font-family: 'Courier New', monospace;
+            margin-bottom: 15px;
             outline: none;
-            box-sizing: border-box;
-            transition: 0.3s;
-        }
-
-        .hacker-input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
         }
 
         .btn-auth {
             width: 100%;
-            background: transparent;
-            border: 1px solid var(--primary);
-            color: var(--primary);
+            background: var(--primary);
+            color: black;
+            border: none;
             padding: 15px;
             font-weight: bold;
             cursor: pointer;
             text-transform: uppercase;
-            letter-spacing: 3px;
-            transition: 0.3s;
-            margin-top: 10px;
         }
 
-        .btn-auth:hover {
-            background: var(--primary);
-            color: black;
-            box-shadow: 0 0 20px var(--primary);
-        }
-
-        #terminalLog {
-            margin-top: 20px;
-            font-size: 11px;
-            height: 80px;
-            overflow-y: auto;
-            color: var(--primary);
-            border-top: 1px dashed rgba(0, 255, 65, 0.3);
-            padding-top: 10px;
-        }
-
-        /* --- MAIN APP UI --- */
+        /* --- MAIN APP PAGE --- */
         #mainPage { 
             display: none; 
             padding: 20px; 
-            background: #f4f7f6; 
-            color: #333; 
-            min-height: 100vh;
+            animation: fadeIn 1.5s ease;
         }
 
-        .app-header {
-            background: #1d2671;
-            color: white;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .glass-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--accent);
             padding: 20px;
-            text-align: center;
-            border-radius: 0 0 20px 20px;
-            margin: -20px -20px 20px -20px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 15px rgba(0,255,65,0.05);
         }
 
-        .card {
-            background: white;
-            color: #333;
+        .search-box {
+            width: 100%;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--primary);
+            color: var(--primary);
             padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            border-left: 5px solid #1d2671;
+            font-size: 16px;
+            margin-bottom: 10px;
         }
 
-        .dr-name { font-weight: bold; color: #1d2671; font-size: 15px; }
-        .dr-detail { font-size: 11px; color: #555; margin-top: 4px; }
-        .dr-tag { display: inline-block; background: #e8f0fe; color: #1d2671; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-top: 5px; font-weight: bold; }
-
-        button.app-btn {
-            border: none; border-radius: 8px; padding: 12px; font-weight: bold; cursor: pointer; color: white; transition: 0.2s;
+        /* --- DOCTOR CARDS --- */
+        #list {
+            display: grid;
+            gap: 15px;
         }
-        .bg-blue { background: #00c6ff; }
-        .bg-green { background: #28a745; }
-        .bg-gold { background: #ffc107; color: #000; }
+
+        .dr-card {
+            background: rgba(10, 10, 10, 0.8);
+            border-left: 3px solid var(--primary);
+            padding: 15px;
+            transition: 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dr-card:hover {
+            background: rgba(0, 255, 65, 0.05);
+            transform: scale(1.02);
+        }
+
+        .dr-name { font-size: 18px; font-weight: bold; margin-bottom: 5px; color: white; }
+        .dr-meta { font-size: 11px; color: var(--text-gray); line-height: 1.4; }
+        .spec-tag { color: var(--primary); font-size: 12px; margin-top: 5px; display: block; }
+
+        /* --- VISIT LOG --- */
+        .visit-log {
+            font-size: 11px;
+            max-height: 150px;
+            overflow-y: auto;
+            border: 1px solid #222;
+            padding: 10px;
+            background: #000;
+        }
+
+        .visit-entry {
+            border-bottom: 1px solid #222;
+            padding: 5px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .visit-entry a { color: #00c6ff; text-decoration: none; }
+
+        .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .action-btn { 
+            padding: 12px; border: 1px solid var(--primary); background: transparent; 
+            color: var(--primary); cursor: pointer; font-size: 12px; font-weight: bold;
+        }
+        .action-btn:active { background: var(--primary); color: black; }
+
     </style>
 </head>
 <body>
@@ -180,275 +164,176 @@
 
 <div id="loginPage">
     <div class="hacker-container">
-        <div class="terminal-header">AUTHORIZATION REQUIRED</div>
-        <div class="input-group">
-            <label>User Identity</label>
-            <input type="text" id="user" class="hacker-input" placeholder="root@arundeep_sys" autocomplete="off">
-        </div>
-        <div class="input-group">
-            <label>Encryption Key</label>
-            <input type="password" id="pass" class="hacker-input" placeholder="••••••••">
-        </div>
-        <button class="btn-auth" onclick="startHack()">Authenticate</button>
-        <div id="terminalLog"></div>
+        <div style="font-size: 12px; margin-bottom: 20px;">SYSTEM IDENTIFICATION REQUIRED</div>
+        <input type="text" id="user" class="hacker-input" placeholder="USERNAME" autocomplete="off">
+        <input type="password" id="pass" class="hacker-input" placeholder="ENCRYPTION_KEY">
+        <button class="btn-auth" onclick="startHack()">EXECUTE LOGIN</button>
+        <div id="terminalLog" style="margin-top: 15px; font-size: 10px; height: 60px; overflow: hidden; text-align: left; opacity: 0.7;"></div>
     </div>
 </div>
 
 <div id="mainPage">
-    <div class="app-header">
-        <h2>Doctor Tracker Pro</h2>
-        <div style="font-size: 12px; opacity: 0.8;">J&K Region Database</div>
-    </div>
-    
-    <input id="search" placeholder="🔍 Search Name, Speciality, or City..." onkeyup="searchDoctor()" 
-           style="width: 100%; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 15px; box-sizing: border-box; font-size: 16px;">
-    
-    <button class="app-btn bg-blue" style="width: 100%; margin-bottom: 10px;" onclick="getLocation()">📍 Get Live Location</button>
-    
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
-        <button class="app-btn bg-green" onclick="saveVisit()">✅ Save Visit</button>
-        <button class="app-btn bg-gold" onclick="exportExcel()">📊 Export Data</button>
+    <div class="glass-panel" style="text-align: center; border-bottom: 3px solid var(--primary);">
+        <h2 style="margin: 0; letter-spacing: 4px;">SYSTEM_TRACKER_PRO</h2>
+        <div id="liveClock" style="font-size: 12px; margin-top: 5px; color: white;"></div>
     </div>
 
-    <div id="map" style="height: 60px; background: #eee; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #666; font-size: 11px; text-align: center; border: 1px dashed #ccc;">
-        Waiting for GPS...
+    <div class="glass-panel">
+        <input id="search" class="search-box" placeholder="SEARCH_DATABASE_..." onkeyup="searchDoctor()">
+        
+        <div class="btn-row">
+            <button class="action-btn" onclick="getLocation()">SYNC_GPS</button>
+            <button class="action-btn" onclick="exportExcel()">DUMP_XLSX</button>
+        </div>
+        <div id="gpsStatus" style="font-size: 10px; color: white; text-align: center;">GPS_OFFLINE</div>
     </div>
 
-    <h4 id="countLabel" style="margin: 20px 0 10px 0; color: #1d2671; border-bottom: 2px solid #1d2671; padding-bottom: 5px;">Doctors List</h4>
+    <div class="glass-panel">
+        <div style="font-size: 12px; margin-bottom: 10px;">LIVE_VISIT_HISTORY</div>
+        <div id="visitLog" class="visit-log">
+            <div style="color:#444">No visits recorded in current session...</div>
+        </div>
+    </div>
+
+    <h4 id="countLabel" style="margin-left: 10px;">RECORDS_FOUND: 0</h4>
     <div id="list"></div>
 </div>
 
 <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 <script>
-    // --- MATRIX ANIMATION ---
+    // --- MATRIX ---
     const canvas = document.getElementById('matrixCanvas');
     const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*";
-    const fontSize = 16;
-    const columns = canvas.width / fontSize;
-    const drops = Array(Math.floor(columns)).fill(1);
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const drops = Array(Math.floor(canvas.width/16)).fill(1);
     function drawMatrix() {
         ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "#00ff41";
-        ctx.font = fontSize + "px monospace";
-        for (let i = 0; i < drops.length; i++) {
-            const text = characters.charAt(Math.floor(Math.random() * characters.length));
-            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        ctx.fillStyle = "#0f0";
+        ctx.font = "15px monospace";
+        drops.forEach((y, i) => {
+            const text = chars[Math.floor(Math.random() * chars.length)];
+            ctx.fillText(text, i * 16, y * 16);
+            if (y * 16 > canvas.height && Math.random() > 0.975) drops[i] = 0;
             drops[i]++;
-        }
+        });
     }
-    setInterval(drawMatrix, 35);
+    setInterval(drawMatrix, 40);
 
-    // --- FULL DATASET ---
+    // --- CLOCK ---
+    setInterval(() => {
+        document.getElementById('liveClock').innerText = "SYSTEM_TIME: " + new Date().toLocaleString();
+    }, 1000);
+
+    // --- DATA ---
     const doctors = [
-        { name: "Khalid . Wani", code: "CIP5085144", class: "B 2", spec: "Consulting Physician", qual: "MD INTERNAL MEDICINE", city: "SRINAGAR", pin: "190005" },
-        { name: "MOHSIN BIN MUSHTAQ", code: "CIP4967916", class: "B 2", spec: "GENERAL PHYSICIAN", qual: "MD INTERNAL MEDICINE", city: "SRINAGAR", pin: "190010" },
-        { name: "Manzoor Ahmad Chalkoo", code: "-", class: "B 3", spec: "Urologists", qual: "DNB UROLOGY", city: "SRINAGAR", pin: "190010" },
-        { name: "Mohd Ashraf Lone", code: "-", class: "B 2", spec: "LAPAROSCOPIC SURGEON", qual: "DNB GEN SURGERY", city: "SRINAGAR", pin: "190003" },
-        { name: "Muzaffar Nazir", code: "-", class: "B 2", spec: "PHYSICIAN", qual: "GENERAL MEDICINE", city: "SRINAGAR", pin: "190003" },
-        { name: "Muzzafar Zargar", code: "-", class: "B 2", spec: "GENERAL PHYSICIAN", qual: "M D GEN MED", city: "SRINAGAR", pin: "190003" },
-        { name: "Nisar Ahmad Shah", code: "CIP5192633", class: "B 2", spec: "SURGEON", qual: "MBBS MS", city: "SRINAGAR", pin: "190003" },
-        { name: "Shahzada . Parray", code: "CIP4852102", class: "B 2", spec: "Consulting Physician", qual: "MD INTERNAL MEDICINE", city: "SRINAGAR", pin: "190003" },
-        { name: "AKIL Latif Lone", code: "CIP4979390", class: "B 1", spec: "SURGEON", qual: "MS GENERAL SURGERY", city: "SRINAGAR (NORTH)", pin: "190011" },
-        { name: "Aashaq . Hussain", code: "CIP4851640", class: "B 1", spec: "SURGEON", qual: "MBBS", city: "SRINAGAR", pin: "190010" },
-        { name: "Abbas Khan", code: "CIP5136951", class: "B 4", spec: "NEPHROLOGIST", qual: "DM NEPHROLOGY", city: "SRINAGAR", pin: "190010" },
-        { name: "Abid Sheik", code: "CIP5136937", class: "B 4", spec: "NEPHROLOGIST", qual: "DM NEPHROLOGY", city: "SRINAGAR", pin: "190010" },
-        { name: "Abid Wani", code: "CIP4855568", class: "B 1", spec: "UROLOGIST", qual: "M Ch UROLOGY", city: "PULWAMA", pin: "192301" },
-        { name: "Adil . Beigh", code: "CIP4852330", class: "B 1", spec: "Consulting Physician", qual: "DM NEPHROLOGY", city: "SRINAGAR", pin: "190004" },
-        { name: "Aisha Kouser", code: "CIP5141446", class: "B 2", spec: "GENERAL PHYSICIAN", qual: "MD INTERNAL MEDICINE", city: "ANANTNAG", pin: "192101" },
-        { name: "Ajaz Ah Malyar", code: "CIP5124994", class: "B 1", spec: "UROLOGIST", qual: "M Ch UROLOGY", city: "SRINAGAR", pin: "190010" },
-        { name: "Akash Ahmadshah", code: "CIP5260154", class: "B 1", spec: "SURGEON", qual: "MS GENERAL SURGERY", city: "SRINAGAR", pin: "190003" },
-        { name: "Akhtar . Ganie", code: "CIP5192625", class: "B 1", spec: "SURGEON", qual: "MS GENERAL SURGERY", city: "SRINAGAR", pin: "190003" },
-        { name: "Amir Bashir", code: "CIP5141447", class: "B 4", spec: "UROLOGIST", qual: "M Ch UROLOGY", city: "SRINAGAR (NORTH)", pin: "190011" },
-        { name: "Arif Hameed", code: "CIP4852381", class: "B 1", spec: "Consulting Physician", qual: "M Ch UROLOGY", city: "SRINAGAR (NORTH)", pin: "190011" },
-        { name: "Ashiq H Bhat", code: "CIP5124991", class: "B 1", spec: "UROLOGIST", qual: "M Ch UROLOGY", city: "SRINAGAR", pin: "190010" },
-        { name: "Azhar Ajaz Khan", code: "CIP4895009", class: "B 1", spec: "UROLOGIST", qual: "MS DNB UROLOGY", city: "SRINAGAR", pin: "190010" },
-        { name: "Bakhtiar Asif Drabu", code: "CIP4845264", class: "B 1", spec: "Consulting Physician", qual: "MBBS", city: "SRINAGAR", pin: "190010" },
-        { name: "Baldev Singh Wazir", code: "CIP4855858", class: "B 1", spec: "UROLOGIST", qual: "MS DNB UROLOGY", city: "HANDWARA", pin: "190001" },
-        { name: "Baldev Singh Wazir", code: "CIP4999765", class: "B 1", spec: "NEUROLOGIST", qual: "MS DNB UROLOGY", city: "SRINAGAR", pin: "190010" },
-        { name: "Basharat . Rather", code: "CLX597182", class: "B 1", spec: "Consulting Physician", qual: "MBBS", city: "SRINAGAR", pin: "190005" },
-        { name: "Bashrat Kasana", code: "CIP5136941", class: "B 4", spec: "Consulting Physician", qual: "MD GENERAL MEDICINE", city: "SRINAGAR", pin: "190010" },
-        { name: "Dr Adnan", code: "CIP5260157", class: "B 1", spec: "SURGEON", qual: "MS GENERAL SURGERY", city: "SRINAGAR (NORTH)", pin: "191201" },
-        { name: "FAHEEM Ui Islam", code: "CIP4975460", class: "B 1", spec: "UROLOGIST", qual: "M Ch UROLOGY", city: "SRINAGAR (NORTH)", pin: "190011" },
-        { name: "FIRDOUS Ahmad Beigh", code: "CIP4970525", class: "B 1", spec: "UROLOGIST", qual: "MS DNB UROLOGY", city: "SRINAGAR (NORTH)", pin: "190011" },
-        { name: "Farhana Siraj", code: "CIP4852070", class: "B 1", spec: "Consulting Physician", qual: "MD INTERNAL MEDICINE", city: "SRINAGAR (NORTH)", pin: "190011" },
-        { name: "Fawad Sidiq", code: "CIP4858824", class: "B 1", spec: "UROLOGIST", qual: "M Ch UROLOGY", city: "SRINAGAR", pin: "190010" },
-        { name: "Fayaz Ahmad Vaar", code: "CIP5136954", class: "B 4", spec: "NEPHROLOGIST", qual: "DM NEPHROLOGY", city: "SRINAGAR", pin: "190010" },
-        { name: "Ghulam Hassan Sheikh", code: "CIP4855634", class: "B 1", spec: "CHEST PHYSICIAN", qual: "MBBS MD", city: "SOPORE", pin: "193202" },
-        { name: "Gokul K", code: "CIP5260158", class: "B 3", spec: "UROLOGIST", qual: "M Ch UROLOGY", city: "SRINAGAR", pin: "190009" },
-        { name: "Hamid Rasool", code: "CIP4885607", class: "B 1", spec: "UROLOGIST", qual: "M Ch UROLOGY", city: "SRINAGAR", pin: "190010" },
-        { name: "IMTIYAZ AHMAD SOFI", code: "CIP5124832", class: "B 1", spec: "UROLOGIST", qual: "MS DNB UROLOGY", city: "SRINAGAR", pin: "190011" },
-        { name: "Imran Muzaffar", code: "CIP5136936", class: "B 4", spec: "Consulting Physician", qual: "MD GENERAL MEDICINE", city: "SRINAGAR (NORTH)", pin: "190015" },
-        { name: "Imran Sofi", code: "CIP5136947", class: "B 4", spec: "NEPHROLOGIST", qual: "DM NEPHROLOGY", city: "SRINAGAR", pin: "190010" },
-        { name: "Imtiyaz Mantoo", code: "CIP5258983", class: "B 3", spec: "UROLOGIST", qual: "MS DNB UROLOGY", city: "SRINAGAR", pin: "190009" },
-        { name: "Imtiyaz Wani", code: "CIR11392", class: "B 1", spec: "Consulting Physician", qual: "MBBS", city: "SRINAGAR (NORTH)", pin: "190011" },
-        { name: "Iqtibaas Ahmad", code: "CIP4858830", class: "B 1", spec: "UROLOGIST", qual: "M Ch UROLOGY", city: "SRINAGAR", pin: "190006" },
-        { name: "Irshad . Kuchay", code: "CIP4851642", class: "B 1", spec: "SURGEON", qual: "MS GENERAL SURGERY", city: "PAMPORA", pin: "192121" },
-        { name: "Ishrat . Hussain", code: "CIP4855829", class: "B 1", spec: "Consulting Physician", qual: "MD", city: "SRINAGAR", pin: "190010" },
-        { name: "Javaid Magray", code: "CIP5136942", class: "B 4", spec: "UROLOGIST", qual: "MS DNB UROLOGY", city: "SRINAGAR", pin: "190010" },
-        { name: "Javeed Magray", code: "CIP4852361", class: "B 1", spec: "Consulting Physician", qual: "MBBS", city: "SRINAGAR", pin: "190010" },
-        { name: "Javeed Qadiri", code: "CIP4858819", class: "B 1", spec: "UROLOGIST", qual: "M Ch UROLOGY", city: "SRINAGAR", pin: "190006" },
-        { name: "Javeed Qadiri", code: "CIP5136940", class: "B 4", spec: "UROLOGIST", qual: "MS DNB UROLOGY", city: "SRINAGAR", pin: "190010" },
-        { name: "Javid Ahmad", code: "CIP5136956", class: "B 2", spec: "Consulting Physician", qual: "MD GENERAL MEDICINE", city: "SRINAGAR (NORTH)", pin: "193121" },
-        { name: "Javvid . Muzamil", code: "CIP4798570", class: "B 1", spec: "ONCO SURGEON", qual: "MD MS ONCO", city: "SRINAGAR", pin: "190010" },
-        { name: "Kaleem", code: "CIP5136939", class: "B 4", spec: "UROLOGIST", qual: "MS DNB UROLOGY", city: "SRINAGAR", pin: "190010" },
-        { name: "Khursheed . Bhat", code: "CIP4852052", class: "B 1", spec: "Consulting Physician", qual: "MD INTERNAL MEDICINE", city: "BARAMULA", pin: "193101" },
-        { name: "Khursheed Ahmed Banday", code: "CIP4855534", class: "B 1", spec: "Consulting Physician", qual: "DM NEPHROLOGY", city: "SRINAGAR", pin: "190015" },
-        { name: "Lateef . Ahmad", code: "CIP4858965", class: "B 1", spec: "SURGEON", qual: "MS GENERAL SURGERY", city: "SOPORE", pin: "193201" },
-        { name: "Lone Abdul Rashid", code: "CIP4858966", class: "B 1", spec: "ONCO SURGEON", qual: "MD MS ONCO", city: "SRINAGAR", pin: "190015" },
-        { name: "MUDASIR Ahmad Tantray", code: "CIP4970516", class: "B 1", spec: "UROLOGIST", qual: "MS DNB UROLOGY", city: "SRINAGAR (NORTH)", pin: "190011" },
-        { name: "Malik . Munfat", code: "CIP4855802", class: "B 1", spec: "UROLOGIST", qual: "M Ch UROLOGY", city: "SRINAGAR", pin: "190003" },
-        { name: "Malikrouf", code: "CIP4953737", class: "B 1", spec: "UROLOGIST", qual: "MS DNB UROLOGY", city: "ANANTNAG", pin: "192101" },
-        { name: "Manzoor . Lone", code: "CIP4851754", class: "B 1", spec: "SURGEON", qual: "MS GENERAL SURGERY", city: "SOPORE", pin: "193201" },
-        { name: "Manzoor Ahmad Dar", code: "CIP4855508", class: "B 1", spec: "UROLOGIST", qual: "M Ch UROLOGY", city: "PULWAMA", pin: "192301" },
-        { name: "Marbit Khan", code: "CIP5136944", class: "B 4", spec: "UROLOGIST", qual: "MBBS", city: "SRINAGAR", pin: "190010" },
-        { name: "Mir Imran", code: "CIP4852339", class: "B 1", spec: "Consulting Physician", qual: "MBBS", city: "SRINAGAR (NORTH)", pin: "190011" },
-        { name: "Mohammad Ismaiel", code: "CIP4855901", class: "B 1", spec: "Consulting Physician", qual: "MBBS", city: "SRINAGAR", pin: "190010" },
-        { name: "Mohammad Lateef Wani", code: "CIP5136958", class: "B 4", spec: "NEPHROLOGIST", qual: "DM NEPHROLOGY", city: "SRINAGAR", pin: "190010" },
-        { name: "Mohammad Shafi Wani", code: "CIP4851684", class: "B 1", spec: "UROLOGIST", qual: "MS DNB UROLOGY", city: "SRINAGAR", pin: "190003" },
-        { name: "Mohammed Bhat", code: "CIW737961", class: "B 1", spec: "Consulting Physician", qual: "MBBS", city: "SRINAGAR (NORTH)", pin: "190011" },
-        { name: "Mohmad . Ayoub", code: "CIP4851638", class: "B 1", spec: "SURGEON", qual: "MS GENERAL SURGERY", city: "PULWAMA", pin: "192301" },
-        { name: "Mubashir . Hajini", code: "CIP4858822", class: "B 1", spec: "Consulting Physician", qual: "MD", city: "SOPORE", pin: "193201" },
-        { name: "Mufti . Mehmood", code: "CIP4855899", class: "B 1", spec: "UROLOGIST", qual: "M Ch UROLOGY", city: "SRINAGAR", pin: "190010" },
-        { name: "Mujhail Mir", code: "CIP5141445", class: "B 2", spec: "UROLOGIST", qual: "MS DNB UROLOGY", city: "ANANTNAG", pin: "192101" },
-        { name: "Muneer Khan", code: "CIP4858820", class: "B 1", spec: "UROLOGIST", qual: "M Ch UROLOGY", city: "HANDWARA", pin: "190001" },
-        { name: "Muneer . Lone", code: "CIP4855812", class: "B 1", spec: "Consulting Physician", qual: "MD INTERNAL MEDICINE", city: "SRINAGAR", pin: "190004" },
-        { name: "Murtaza Khan", code: "CIP5136957", class: "B 4", spec: "NEPHROLOGIST", qual: "DM NEPHROLOGY", city: "SRINAGAR", pin: "190010" },
-        { name: "Mushtaq Ahmad Chalkoo", code: "CIP4855826", class: "B 1", spec: "SURGEON", qual: "MBBS", city: "HANDWARA", pin: "190001" },
-        { name: "Muzaffar Maqsood Wani", code: "CIP4852392", class: "B 1", spec: "Consulting Physician", qual: "DM NEPHROLOGY", city: "SRINAGAR (NORTH)", pin: "190011" },
-        { name: "Muzamil Wani", code: "CIP5136945", class: "B 4", spec: "NEPHROLOGIST", qual: "DM NEPHROLOGY", city: "SRINAGAR", pin: "190010" },
-        { name: "NAVEED KHAN", code: "CIP5059270", class: "B 1", spec: "UROLOGIST", qual: "M Ch UROLOGY", city: "SRINAGAR", pin: "190005" },
-        { name: "Naseer . Awan", code: "CIP4855788", class: "B 1", spec: "SURGEON", qual: "MS GENERAL SURGERY", city: "SRINAGAR", pin: "190005" },
-        { name: "Naveed . Khan", code: "CIP4852334", class: "B 1", spec: "UROLOGIST", qual: "MBBS", city: "SRINAGAR", pin: "190004" },
-        { name: "Nissar Shamas", code: "CIP5258982", class: "B 1", spec: "Consulting Physician", qual: "MD INTERNAL MEDICINE", city: "SRINAGAR", pin: "190003" },
-        { name: "Omer Hafiz", code: "CIP4845268", class: "B 4", spec: "Consulting Physician", qual: "MD GENERAL MEDICINE", city: "SRINAGAR", pin: "190011" },
-        { name: "Omer Mukhtar", code: "CIP5144165", class: "B 4", spec: "UROLOGIST", qual: "MS DNB UROLOGY", city: "SRINAGAR", pin: "190011" },
-        { name: "Omer Saleem", code: "CIP5136953", class: "B 4", spec: "UROLOGIST", qual: "MS DNB UROLOGY", city: "SRINAGAR", pin: "190010" },
-        { name: "Omer . Saleem", code: "CIP4855902", class: "B 1", spec: "UROLOGIST", qual: "M Ch UROLOGY", city: "SRINAGAR", pin: "190010" },
-        { name: "Owais Qadiri", code: "CIP5144166", class: "B 4", spec: "UROLOGIST", qual: "MS DNB UROLOGY", city: "SRINAGAR", pin: "190011" },
-        { name: "Prince Ahmad", code: "CIP4855935", class: "B 1", spec: "UROLOGIST", qual: "MS DNB UROLOGY", city: "SRINAGAR (NORTH)", pin: "190011" },
-        { name: "Prince MuzafaSani", code: "CIP5141448", class: "B 4", spec: "UROLOGIST", qual: "M Ch UROLOGY", city: "SRINAGAR", pin: "190009" },
-        { name: "Rabi Ahmad", code: "CIP5136938", class: "B 4", spec: "NEPHROLOGIST", qual: "DM NEPHROLOGY", city: "SRINAGAR", pin: "190010" },
-        { name: "Rahul Singh", code: "CIP4851867", class: "B 4", spec: "UROLOGIST", qual: "MS DNB UROLOGY", city: "SRINAGAR", pin: "190010" },
-        { name: "Rameez", code: "CIP5258981", class: "B 1", spec: "Consulting Physician", qual: "MD INTERNAL MEDICINE", city: "SRINAGAR (NORTH)", pin: "191201" },
-        { name: "Ravinder Singh Bali", code: "CIP4855688", class: "B 1", spec: "Consulting Physician", qual: "MBBS", city: "BARAMULA", pin: "193101" },
-        { name: "Rouf Khawaja", code: "CIP4858827", class: "B 1", spec: "UROLOGIST", qual: "MS DNB UROLOGY", city: "SRINAGAR (NORTH)", pin: "190011" },
-        { name: "SAQIB Mahdi", code: "CIP4998872", class: "B 1", spec: "UROLOGIST", qual: "M Ch UROLOGY", city: "SRINAGAR (NORTH)", pin: "190011" },
-        { name: "SYED Shahnawaz", code: "CIP4855898", class: "B 1", spec: "UROLOGIST", qual: "M Ch UROLOGY", city: "SRINAGAR", pin: "190010" },
-        { name: "SYED Adil Andrabi", code: "CIP5260155", class: "B 3", spec: "UROLOGIST", qual: "M Ch UROLOGY", city: "SRINAGAR", pin: "190009" },
-        { name: "Sajad Parra", code: "CIP4858828", class: "B 1", spec: "UROLOGIST", qual: "M Ch UROLOGY", city: "SRINAGAR (NORTH)", pin: "190011" },
-        { name: "Sajad Ah Malik", code: "CIP4941797", class: "B 1", spec: "UROLOGIST", qual: "M Ch UROLOGY", city: "SRINAGAR (NORTH)", pin: "190011" },
-        { name: "Sajid Bazaz", code: "CIP4852314", class: "B 2", spec: "UROLOGIST", qual: "MS DNB UROLOGY", city: "SRINAGAR (NORTH)", pin: "193101" },
-        { name: "Sajid Bazaz", code: "CIP4941796", class: "B 1", spec: "UROLOGIST", qual: "MS DNB UROLOGY", city: "SRINAGAR", pin: "190006" },
-        { name: "Sajjad Bazaz", code: "CIP5136949", class: "B 4", spec: "UROLOGIST", qual: "MS DNB UROLOGY", city: "SRINAGAR", pin: "190010" },
-        { name: "Saleem Wani", code: "CIP4852386", class: "B 1", spec: "Consulting Physician", qual: "MD GENERAL MEDICINE", city: "SRINAGAR (NORTH)", pin: "190011" },
-        { name: "Shabir Ahmad Mir", code: "CIP5124971", class: "B 1", spec: "UROLOGIST", qual: "MS DNB UROLOGY", city: "SRINAGAR", pin: "190010" },
-        { name: "Shahnawaz . Rasool", code: "CIP4972460", class: "B 1", spec: "UROLOGIST", qual: "MBBS", city: "SOPORE", pin: "193201" },
-        { name: "Sheik Reyaz", code: "CIP5141449", class: "B 4", spec: "UROLOGIST", qual: "MS DNB UROLOGY", city: "SRINAGAR", pin: "190009" },
-        { name: "Sheik Ubaid", code: "CIP5258978", class: "B 1", spec: "Consulting Physician", qual: "MD GENERAL MEDICINE", city: "SRINAGAR (NORTH)", pin: "193101" },
-        { name: "Sheikh . Aijaz", code: "CIP4855616", class: "B 1", spec: "ONCO SURGEON", qual: "DM ONCOLOGY", city: "SRINAGAR", pin: "190008" },
-        { name: "Suhail Ahmad", code: "CIP4852380", class: "B 1", spec: "Consulting Physician", qual: "MD GENERAL MEDICINE", city: "SRINAGAR (NORTH)", pin: "190011" },
-        { name: "Suhail Mantoo", code: "CIP4851995", class: "B 1", spec: "Consulting Physician", qual: "MD", city: "SRINAGAR (NORTH)", pin: "190011" },
-        { name: "Suhail Sangeen", code: "CIP5258980", class: "B 2", spec: "SURGEON", qual: "MS GENERAL SURGERY", city: "SRINAGAR (NORTH)", pin: "191201" },
-        { name: "Suhail Masood Khan", code: "CIP4969595", class: "B 1", spec: "UROLOGIST", qual: "M Ch UROLOGY", city: "SOPORE", pin: "193201" },
-        { name: "Syed Shakeeb", code: "CIP5260156", class: "B 3", spec: "UROLOGIST", qual: "M Ch UROLOGY", city: "SRINAGAR", pin: "190011" },
-        { name: "Syed Sajad Nazir", code: "CIP4855900", class: "B 1", spec: "UROLOGIST", qual: "M Ch UROLOGY", city: "SRINAGAR", pin: "190010" },
-        { name: "TAJAMUL Hassan", code: "CIP4986103", class: "B 1", spec: "UROLOGIST", qual: "MS DNB UROLOGY", city: "SRINAGAR (NORTH)", pin: "190011" },
-        { name: "TUFEEL Ahmad Khan", code: "CIP4970535", class: "B 1", spec: "UROLOGIST", qual: "M Ch UROLOGY", city: "SRINAGAR (NORTH)", pin: "190011" },
-        { name: "Tahir Tahir Ahmad", code: "CIP5136952", class: "B 4", spec: "UROLOGIST", qual: "MBBS", city: "SRINAGAR", pin: "190010" },
-        { name: "Tajamul Hussain", code: "CIP4852148", class: "B 4", spec: "NEPHROLOGIST", qual: "DM NEPHROLOGY", city: "SRINAGAR", pin: "190010" },
-        { name: "Tanveer . Iqbal", code: "CIP4855833", class: "B 1", spec: "UROLOGIST", qual: "M Ch UROLOGY", city: "SRINAGAR", pin: "190010" },
-        { name: "Tariq . Ahmad", code: "CIP5035002", class: "B 1", spec: "Consulting Physician", qual: "MBBS", city: "SRINAGAR", pin: "190018" },
-        { name: "Ubair Qayoom", code: "CIP5258984", class: "B 1", spec: "Consulting Physician", qual: "MD GENERAL MEDICINE", city: "SRINAGAR (NORTH)", pin: "193101" },
-        { name: "Waseem Ashraf", code: "CIP5136955", class: "B 3", spec: "UROLOGIST", qual: "MS DNB UROLOGY", city: "SRINAGAR", pin: "190010" },
-        { name: "YASIR Iqbal", code: "CIP4978395", class: "B 1", spec: "UROLOGIST", qual: "M Ch UROLOGY", city: "SRINAGAR", pin: "190010" },
-        { name: "YOUNIS Mushtaq", code: "CIP4975459", class: "B 1", spec: "UROLOGIST", qual: "MS DNB UROLOGY", city: "SRINAGAR (NORTH)", pin: "190011" },
-        { name: "Yasir . Qadri", code: "CIP5125005", class: "B 1", spec: "UROLOGIST", qual: "MS DNB UROLOGY", city: "SRINAGAR", pin: "190010" },
-        { name: "Zahid Mohd Rather", code: "CIP4851659", class: "B 1", spec: "UROLOGIST", qual: "MS GENERAL SURGERY", city: "ANANTNAG", pin: "192101" },
-        { name: "Zahoor Ah Gilkar", code: "CIP4855698", class: "B 1", spec: "UROLOGIST", qual: "M Ch UROLOGY", city: "MOHMMAD PORA", pin: "192231" },
-        { name: "Zaid Rather", code: "CIP5136950", class: "B 2", spec: "UROLOGIST", qual: "MS DNB UROLOGY", city: "ANANTNAG", pin: "192101" },
-        { name: "saba Ulalam", code: "CIP5258979", class: "B 3", spec: "UROLOGIST", qual: "M Ch UROLOGY", city: "SRINAGAR", pin: "19000" }
+        { name: "Khalid . Wani", spec: "Consulting Physician", qual: "MD INTERNAL MEDICINE", city: "SRINAGAR", pin: "190005" },
+        { name: "MOHSIN BIN MUSHTAQ", spec: "GENERAL PHYSICIAN", qual: "MD INTERNAL MEDICINE", city: "SRINAGAR", pin: "190010" },
+        { name: "Manzoor Ahmad Chalkoo", spec: "Urologists", qual: "DNB UROLOGY", city: "SRINAGAR", pin: "190010" },
+        { name: "Mohd Ashraf Lone", spec: "LAPAROSCOPIC SURGEON", qual: "DNB GEN SURGERY", city: "SRINAGAR", pin: "190003" },
+        { name: "Muzaffar Nazir", spec: "PHYSICIAN", qual: "GENERAL MEDICINE", city: "SRINAGAR", pin: "190003" },
+        { name: "Muzzafar Zargar", spec: "GENERAL PHYSICIAN", qual: "M D GEN MED", city: "SRINAGAR", pin: "190003" },
+        { name: "Nisar Ahmad Shah", spec: "SURGEON", qual: "MBBS MS", city: "SRINAGAR", pin: "190003" },
+        { name: "Shahzada . Parray", spec: "Consulting Physician", qual: "MD INTERNAL MEDICINE", city: "SRINAGAR", pin: "190003" },
+        { name: "AKIL Latif Lone", spec: "SURGEON", qual: "MS GENERAL SURGERY", city: "SRINAGAR (NORTH)", pin: "190011" },
+        { name: "Abbas Khan", spec: "NEPHROLOGIST", qual: "DM NEPHROLOGY", city: "SRINAGAR", pin: "190010" },
+        { name: "Abid Sheik", spec: "NEPHROLOGIST", qual: "DM NEPHROLOGY", city: "SRINAGAR", pin: "190010" },
+        { name: "Aisha Kouser", spec: "GENERAL PHYSICIAN", qual: "MD INTERNAL MEDICINE", city: "ANANTNAG", pin: "192101" },
+        { name: "Ghulam Hassan Sheikh", spec: "CHEST PHYSICIAN", qual: "MBBS MD", city: "SOPORE", pin: "193202" },
+        { name: "Lateef . Ahmad", spec: "SURGEON", qual: "MS GENERAL SURGERY", city: "SOPORE", pin: "193201" },
+        { name: "Suhail Masood Khan", spec: "UROLOGIST", qual: "M Ch UROLOGY", city: "SOPORE", pin: "193201" }
     ];
 
-    let currentGPS = "Not Locked";
+    let userLat = null, userLng = null;
 
-    // --- LOGIC ---
-    function addLog(msg) {
-        const log = document.getElementById('terminalLog');
-        log.innerHTML += `<div>> ${msg}</div>`;
-        log.scrollTop = log.scrollHeight;
+    function addLog(m) {
+        const t = document.getElementById('terminalLog');
+        t.innerHTML += `<div>> ${m}</div>`;
+        t.scrollTop = t.scrollHeight;
     }
 
     function startHack() {
         const u = document.getElementById('user').value;
         const p = document.getElementById('pass').value;
         if(u === "admin" && p === "1234") {
-            addLog("Bypassing firewall...");
-            setTimeout(() => addLog("Injecting SQL payload..."), 300);
-            setTimeout(() => addLog("Database connection established."), 600);
+            addLog("Authenticating...");
+            setTimeout(() => addLog("Handshake successful."), 300);
+            setTimeout(() => addLog("Decrypting data blocks..."), 600);
             setTimeout(() => {
-                document.getElementById('loginPage').style.display = 'none';
-                document.getElementById('mainPage').style.display = 'block';
-                renderList(doctors);
-            }, 1000);
+                document.getElementById('loginPage').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loginPage').style.display = 'none';
+                    document.getElementById('mainPage').style.display = 'block';
+                    render(doctors);
+                }, 500);
+            }, 1200);
         } else {
-            addLog("CRITICAL ERROR: Authorization Denied.");
+            addLog("ACCESS_DENIED");
         }
     }
 
-    function renderList(data) {
-        const listDiv = document.getElementById('list');
-        listDiv.innerHTML = "";
+    function render(data) {
+        const list = document.getElementById('list');
+        list.innerHTML = "";
         data.forEach(d => {
-            listDiv.innerHTML += `
-                <div class="card">
+            list.innerHTML += `
+                <div class="dr-card" onclick="markVisit('${d.name}')">
                     <div class="dr-name">${d.name}</div>
-                    <div class="dr-tag">${d.spec}</div>
-                    <div class="dr-detail">
-                        <b>Qual:</b> ${d.qual}<br>
-                        <b>Legacy:</b> ${d.code} | <b>Class:</b> ${d.class}<br>
-                        <b>Loc:</b> ${d.city} (${d.pin})
+                    <span class="spec-tag">${d.spec}</span>
+                    <div class="dr-meta">
+                        QUAL: ${d.qual}<br>
+                        LOCATION: ${d.city} (${d.pin})
                     </div>
+                    <div style="font-size:9px; color:var(--primary); margin-top:10px; opacity:0.5;">[CLICK TO SAVE VISIT]</div>
                 </div>`;
         });
-        document.getElementById('countLabel').innerText = `Results Found: ${data.length}`;
+        document.getElementById('countLabel').innerText = "RECORDS_FOUND: " + data.length;
     }
 
     function searchDoctor() {
         const q = document.getElementById('search').value.toLowerCase();
-        const filtered = doctors.filter(d => 
-            d.name.toLowerCase().includes(q) || 
-            d.spec.toLowerCase().includes(q) || 
-            d.city.toLowerCase().includes(q) ||
-            d.qual.toLowerCase().includes(q)
-        );
-        renderList(filtered);
+        const filtered = doctors.filter(d => d.name.toLowerCase().includes(q) || d.city.toLowerCase().includes(q) || d.spec.toLowerCase().includes(q));
+        render(filtered);
     }
 
     function getLocation() {
-        const map = document.getElementById('map');
-        map.innerText = "🛰️ Connecting to satellites...";
+        document.getElementById('gpsStatus').innerText = "QUERYING_SATELLITES...";
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(pos => {
-                currentGPS = `${pos.coords.latitude.toFixed(5)}, ${pos.coords.longitude.toFixed(5)}`;
-                map.innerHTML = `📍 LOCKED: <span style="color:#28a745">${currentGPS}</span>`;
-            }, () => map.innerText = "❌ GPS Access Denied");
+            navigator.geolocation.getCurrentPosition(p => {
+                userLat = p.coords.latitude;
+                userLng = p.coords.longitude;
+                document.getElementById('gpsStatus').innerText = `LAT:${userLat.toFixed(4)} LNG:${userLng.toFixed(4)} [READY]`;
+            });
         }
     }
 
-    function saveVisit() {
-        alert(`Visit Synced!\nGPS: ${currentGPS}\nTime: ${new Date().toLocaleTimeString()}`);
+    function markVisit(drName) {
+        if(!userLat) {
+            alert("Sync GPS before marking visit!");
+            return;
+        }
+        const time = new Date().toLocaleTimeString();
+        const log = document.getElementById('visitLog');
+        if(log.innerText.includes("No visits")) log.innerHTML = "";
+        
+        const mapUrl = `https://www.google.com/maps?q=${userLat},${userLng}`;
+        
+        const entry = document.createElement('div');
+        entry.className = "visit-entry";
+        entry.innerHTML = `
+            <span><b>${drName}</b> at ${time}</span>
+            <a href="${mapUrl}" target="_blank">[MAP]</a>
+        `;
+        log.prepend(entry);
+        alert(`Visit Recorded for ${drName}`);
     }
 
     function exportExcel() {
         const ws = XLSX.utils.json_to_sheet(doctors);
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Doctors_JK");
-        XLSX.writeFile(wb, "Doctor_Data_Export.xlsx");
+        XLSX.utils.book_append_sheet(wb, ws, "Database");
+        XLSX.writeFile(wb, "System_Dump.xlsx");
     }
 </script>
 </body>
