@@ -11,6 +11,7 @@
             --primary: #00c6ff;
             --success: #28a745;
             --warning: #ffc107;
+            --pitch-bg: #101840;
         }
 
         body, html {
@@ -33,9 +34,9 @@
         }
 
         .terminal-box {
-            background: rgba(0, 10, 0, 0.9);
+            background: rgba(0, 10, 0, 0.95);
             border: 2px solid var(--matrix-green);
-            box-shadow: 0 0 20px var(--matrix-green);
+            box-shadow: 0 0 25px var(--matrix-green);
             width: 90%; max-width: 400px;
             padding: 30px; border-radius: 5px;
             text-align: left;
@@ -44,63 +45,78 @@
         .terminal-header {
             font-weight: bold; border-bottom: 1px solid var(--matrix-green);
             margin-bottom: 20px; padding-bottom: 5px; font-size: 14px;
+            letter-spacing: 1px;
         }
 
         .hacker-input {
             width: 100%; background: transparent; border: 1px solid var(--matrix-green);
             color: var(--matrix-green); padding: 12px; margin: 10px 0;
             outline: none; font-family: 'Courier New', monospace; box-sizing: border-box;
+            font-size: 16px;
         }
 
         .hacker-btn {
             width: 100%; background: var(--matrix-green); color: black;
             border: none; padding: 15px; font-weight: bold; cursor: pointer;
             text-transform: uppercase; letter-spacing: 2px; transition: 0.3s;
+            margin-top: 10px;
         }
 
         .hacker-btn:hover { background: #fff; box-shadow: 0 0 15px #fff; }
 
         #statusLog {
-            font-size: 12px; margin-top: 15px; height: 60px; overflow: hidden;
-            color: #008f11; line-height: 1.4;
+            font-size: 11px; margin-top: 15px; height: 70px; overflow: hidden;
+            color: #008f11; line-height: 1.5; border-top: 1px dashed rgba(0,255,65,0.3);
+            padding-top: 10px;
         }
 
         /* --- MAIN APP UI --- */
         #mainPage { 
             display: none; position: relative; z-index: 20; 
-            background: #f0f2f5; min-height: 100vh; font-family: 'Segoe UI', sans-serif; color: #333;
+            background: #f4f7f6; min-height: 100vh; font-family: 'Segoe UI', sans-serif; color: #333;
         }
 
         header {
             padding: 20px; text-align: center; font-size: 22px; font-weight: bold;
-            background: #1d2671; color: white; position: sticky; top: 0; z-index: 100;
+            background: linear-gradient(to right, #1d2671, #c33764); color: white; 
+            position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
 
         .container { padding: 15px; max-width: 600px; margin: auto; padding-bottom: 80px; }
 
+        /* Product Pitch Styling */
+        .pitch-container {
+            background: var(--pitch-bg); color: white; padding: 15px; 
+            border-radius: 12px; margin-bottom: 15px; border-left: 5px solid var(--primary);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
         .card {
             background: white; padding: 15px; border-radius: 12px; margin-bottom: 12px;
-            border-left: 6px solid var(--primary); box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-left: 6px solid var(--primary); box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
 
         .dr-name { font-weight: bold; font-size: 17px; display: block; color: #1d2671; }
-        .dr-detail { font-size: 13px; color: #666; margin-top: 5px; line-height: 1.4; }
+        .dr-detail { font-size: 13px; color: #555; margin-top: 5px; line-height: 1.4; }
 
         button.app-btn {
             width: 100%; padding: 15px; margin: 8px 0; border: none; border-radius: 10px;
             font-size: 15px; font-weight: bold; cursor: pointer; color: white;
+            transition: 0.2s;
         }
+
+        button.app-btn:active { transform: scale(0.98); }
 
         .btn-blue { background: var(--primary); }
         .btn-green { background: var(--success); }
         .btn-gold { background: var(--warning); color: #000; }
         
         #search {
-            width: 100%; padding: 15px; border-radius: 10px; border: 1px solid #ddd;
-            margin-bottom: 15px; font-size: 16px; box-sizing: border-box;
+            width: 100%; padding: 15px; border-radius: 10px; border: 1px solid #ccc;
+            margin-bottom: 15px; font-size: 16px; box-sizing: border-box; outline: none;
         }
 
-        #map { height: 200px; border-radius: 12px; margin: 15px 0; background: #eee; overflow: hidden; }
+        #map { height: 200px; border-radius: 12px; margin: 15px 0; background: #ddd; overflow: hidden; border: 1px solid #ccc; }
         footer { position: fixed; bottom: 0; width: 100%; background: #000; text-align: center; padding: 10px; font-size: 12px; color: white; }
     </style>
 </head>
@@ -110,11 +126,11 @@
 
 <div id="loginPage">
     <div class="terminal-box">
-        <div class="terminal-header">ARUNDEEP_OS SECURE_LOGIN v2.0</div>
+        <div class="terminal-header">ARUNDEEP_SYSTEMS :: SECURE_ACCESS</div>
         <div id="loginForm">
-            <label style="font-size: 10px;">USER_ID:</label>
-            <input id="user" class="hacker-input" placeholder="root" autocomplete="off">
-            <label style="font-size: 10px;">ACCESS_TOKEN:</label>
+            <label style="font-size: 10px; opacity: 0.8;">USER_IDENTITY:</label>
+            <input id="user" class="hacker-input" placeholder="admin" autocomplete="off">
+            <label style="font-size: 10px; opacity: 0.8;">AUTH_KEY:</label>
             <input id="pass" type="password" class="hacker-input" placeholder="****">
             <button class="hacker-btn" onclick="startLoginProcess()">Initialize Access</button>
         </div>
@@ -123,16 +139,32 @@
 </div>
 
 <div id="mainPage">
-    <header>Doctor Visit Tracker</header>
+    <header>Arundeep Doctor Tracker</header>
     <div class="container">
+        
+        <div class="pitch-container">
+            <div style="margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px;">
+                <strong style="color: var(--primary); font-size: 14px;">🚀 Sliorap (Silodosin) - Speed Pitch:</strong><br>
+                <span style="font-size: 12px; opacity: 0.9;">"Sir, it's a Highly Selective Alpha-1A Blocker. Targets the prostate specifically—less dizziness, faster relief of urinary symptoms."</span>
+            </div>
+            <div>
+                <strong style="color: var(--warning); font-size: 14px;">📉 Finzap (Finasteride) - Volume Pitch:</strong><br>
+                <span style="font-size: 12px; opacity: 0.9;">"A 5-Alpha Reductase Inhibitor. It blocks Testosterone to DHT conversion—treating the actual cause of prostate enlargement."</span>
+            </div>
+        </div>
+
         <input id="search" placeholder="🔍 Search Name, Specialty, or City..." onkeyup="searchDoctor()">
+        
         <button class="app-btn btn-blue" onclick="getLocation()">📍 Step 1: Get GPS Location</button>
+        
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
             <button class="app-btn btn-green" onclick="saveVisit()">✅ Save Visit</button>
             <button class="app-btn btn-gold" onclick="exportExcel()">📊 Export Data</button>
         </div>
-        <div id="map"><p style="text-align:center; padding-top:80px; color:#999">Map Loading...</p></div>
-        <h3 id="countLabel" style="border-bottom: 2px solid #1d2671; padding-bottom: 10px;">Doctors List</h3>
+        
+        <div id="map"><p style="text-align:center; padding-top:80px; color:#999">Map Loading Interface...</p></div>
+        
+        <h3 id="countLabel" style="border-bottom: 2px solid #1d2671; padding-bottom: 10px; color: #1d2671;">Doctors List</h3>
         <div id="list"></div>
     </div>
     <footer>© All Rights Reserved by Arundeep</footer>
@@ -161,7 +193,7 @@
             rainDrops[i]++;
         }
     }
-    setInterval(drawMatrix, 30);
+    let matrixInterval = setInterval(drawMatrix, 30);
 
     // --- LOGIN LOGIC ---
     function startLoginProcess() {
@@ -170,11 +202,13 @@
         const log = document.getElementById('statusLog');
 
         if(u === "admin" && p === "1234") {
+            log.innerHTML = "";
             const steps = [
-                "> Bypassing Firewall...",
-                "> Handshaking with Satellite...",
-                "> Decrypting Doctor Database...",
-                "> Access Granted. Loading System..."
+                "> [INFO] Initializing Handshake...",
+                "> [WARN] Bypassing Local Firewall...",
+                "> [OK] Database Connection Established",
+                "> [INFO] Decrypting Doctor Registry...",
+                "> [SUCCESS] Access Granted. Loading..."
             ];
             let i = 0;
             const timer = setInterval(() => {
@@ -185,18 +219,19 @@
                     clearInterval(timer);
                     setTimeout(() => {
                         document.getElementById('loginPage').style.display = 'none';
+                        clearInterval(matrixInterval);
                         document.getElementById('canvas').style.display = 'none';
                         document.getElementById('mainPage').style.display = 'block';
                         load(doctorData);
                     }, 800);
                 }
-            }, 600);
+            }, 500);
         } else {
-            log.innerHTML = "<div style='color:red'>> ERROR: ACCESS DENIED.</div>";
+            log.innerHTML = "<div style='color:red'>> [CRITICAL] ACCESS DENIED: INVALID_TOKEN</div>";
         }
     }
 
-    // --- DOCTOR DATASET ---
+    // --- FULL DOCTOR DATASET ---
     const doctorData = [
         "Khalid . Wani | CIP5085144B | Consulting Physician MD INTERNAL MEDICINE | SRINAGAR 190005",
         "MOHSIN BIN MUSHTAQ | CIP4967916B | GENERAL PHYSICIAN MD INTERNAL MEDICINE | SRINAGAR 190010",
@@ -359,24 +394,29 @@
             currentLoc = pos.coords;
             document.getElementById("map").innerHTML = `
                 <iframe width="100%" height="100%" frameborder="0" 
-                src="https://maps.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}&z=15&output=embed"></iframe>`;
-        }, () => alert("GPS access denied. Check permissions."));
+                src="https://maps.google.com/maps?q=$${pos.coords.latitude},${pos.coords.longitude}&z=15&output=embed"></iframe>`;
+        }, () => alert("GPS Error: Please enable location services."));
     }
 
     function saveVisit() {
-        if(!currentLoc) return alert("Get GPS location first!");
-        visits.push({ date: new Date().toLocaleDateString(), time: new Date().toLocaleTimeString(), lat: currentLoc.latitude, lng: currentLoc.longitude });
+        if(!currentLoc) return alert("Please get location first!");
+        visits.push({
+            date: new Date().toLocaleDateString(),
+            time: new Date().toLocaleTimeString(),
+            lat: currentLoc.latitude,
+            lng: currentLoc.longitude
+        });
         localStorage.setItem("visits", JSON.stringify(visits));
-        alert("Visit Saved locally.");
+        alert("Visit logged successfully.");
     }
 
     function exportExcel() {
-        if(visits.length === 0) return alert("No visits recorded.");
+        if(visits.length === 0) return alert("No visits recorded yet.");
         let csv = "Date,Time,Lat,Lng\n" + visits.map(v => `${v.date},${v.time},${v.lat},${v.lng}`).join("\n");
         let blob = new Blob([csv], { type: 'text/csv' });
         let a = document.createElement("a");
         a.href = URL.createObjectURL(blob);
-        a.download = "Visits_Report.csv";
+        a.download = "Doctor_Visits_Log.csv";
         a.click();
     }
 </script>
