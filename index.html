@@ -1,53 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arundeep Doctor Tracker Pro | Secure Terminal</title>
+    <style>
+        :root {
+            --matrix-green: #00ff41;
+            --dark-bg: #000800;
+            --primary: #00c6ff;
+            --success: #28a745;
+            --warning: #ffc107;
+        }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            font-family: 'Courier New', Courier, monospace;
+            background-color: var(--dark-bg);
+            color: var(--matrix-green);
+            overflow-x: hidden;
+        }
+
+        /* Matrix Background */
+        #canvas {
+            position: fixed; top: 0; left: 0; z-index: 1;
+        }
+
+        /* --- LOGIN PAGE (TERMINAL) --- */
+        #loginPage {
+            position: relative; z-index: 10;
+            height: 100vh; display: flex; justify-content: center; align-items: center;
+        }
+
+        .terminal-box {
+            background: rgba(0, 10, 0, 0.9);
+            border: 2px solid var(--matrix-green);
+            box-shadow: 0 0 20px var(--matrix-green);
+            width: 90%; max-width: 400px;
+            padding: 30px; border-radius: 5px;
+            text-align: left;
+        }
+
+        .terminal-header {
+            font-weight: bold; border-bottom: 1px solid var(--matrix-green);
+            margin-bottom: 20px; padding-bottom: 5px; font-size: 14px;
+        }
+
+        .hacker-input {
+            width: 100%; background: transparent; border: 1px solid var(--matrix-green);
+            color: var(--matrix-green); padding: 12px; margin: 10px 0;
+            outline: none; font-family: 'Courier New', monospace; box-sizing: border-box;
+        }
+
+        .hacker-btn {
+            width: 100%; background: var(--matrix-green); color: black;
+            border: none; padding: 15px; font-weight: bold; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 2px; transition: 0.3s;
+        }
+
+        .hacker-btn:hover { background: #fff; box-shadow: 0 0 15px #fff; }
+
+        #statusLog {
+            font-size: 12px; margin-top: 15px; height: 60px; overflow: hidden;
+            color: #008f11; line-height: 1.4;
+        }
+
+        /* --- MAIN APP UI --- */
+        #mainPage { 
+            display: none; position: relative; z-index: 20; 
+            background: #f0f2f5; min-height: 100vh; font-family: 'Segoe UI', sans-serif; color: #333;
+        }
+
+        header {
+            padding: 20px; text-align: center; font-size: 22px; font-weight: bold;
+            background: #1d2671; color: white; position: sticky; top: 0; z-index: 100;
+        }
+
+        .container { padding: 15px; max-width: 600px; margin: auto; padding-bottom: 80px; }
+
+        .card {
+            background: white; padding: 15px; border-radius: 12px; margin-bottom: 12px;
+            border-left: 6px solid var(--primary); box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .dr-name { font-weight: bold; font-size: 17px; display: block; color: #1d2671; }
+        .dr-detail { font-size: 13px; color: #666; margin-top: 5px; line-height: 1.4; }
+
+        button.app-btn {
+            width: 100%; padding: 15px; margin: 8px 0; border: none; border-radius: 10px;
+            font-size: 15px; font-weight: bold; cursor: pointer; color: white;
+        }
+
+        .btn-blue { background: var(--primary); }
+        .btn-green { background: var(--success); }
+        .btn-gold { background: var(--warning); color: #000; }
+        
+        #search {
+            width: 100%; padding: 15px; border-radius: 10px; border: 1px solid #ddd;
+            margin-bottom: 15px; font-size: 16px; box-sizing: border-box;
+        }
+
+        #map { height: 200px; border-radius: 12px; margin: 15px 0; background: #eee; overflow: hidden; }
+        footer { position: fixed; bottom: 0; width: 100%; background: #000; text-align: center; padding: 10px; font-size: 12px; color: white; }
+    </style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+
+<div id="loginPage">
+    <div class="terminal-box">
+        <div class="terminal-header">ARUNDEEP_OS SECURE_LOGIN v2.0</div>
+        <div id="loginForm">
+            <label style="font-size: 10px;">USER_ID:</label>
+            <input id="user" class="hacker-input" placeholder="root" autocomplete="off">
+            <label style="font-size: 10px;">ACCESS_TOKEN:</label>
+            <input id="pass" type="password" class="hacker-input" placeholder="****">
+            <button class="hacker-btn" onclick="startLoginProcess()">Initialize Access</button>
+        </div>
+        <div id="statusLog"></div>
+    </div>
+</div>
+
+<div id="mainPage">
+    <header>Doctor Visit Tracker</header>
+    <div class="container">
+        <input id="search" placeholder="🔍 Search Name, Specialty, or City..." onkeyup="searchDoctor()">
+        <button class="app-btn btn-blue" onclick="getLocation()">📍 Step 1: Get GPS Location</button>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <button class="app-btn btn-green" onclick="saveVisit()">✅ Save Visit</button>
+            <button class="app-btn btn-gold" onclick="exportExcel()">📊 Export Data</button>
+        </div>
+        <div id="map"><p style="text-align:center; padding-top:80px; color:#999">Map Loading...</p></div>
+        <h3 id="countLabel" style="border-bottom: 2px solid #1d2671; padding-bottom: 10px;">Doctors List</h3>
+        <div id="list"></div>
+    </div>
+    <footer>© All Rights Reserved by Arundeep</footer>
+</div>
+
 <script>
-    // MATRIX
+    // --- MATRIX ANIMATION ---
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-
-    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%\"'#&_(),.;:?!\\|{}<>[]^~";
     const fontSize = 16;
     const columns = canvas.width / fontSize;
     const rainDrops = Array.from({ length: columns }).fill(1);
 
     function drawMatrix() {
-        ctx.fillStyle = 'rgba(0,0,0,0.05)';
+        ctx.fillStyle = 'rgba(0, 8, 0, 0.05)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = '#0F0';
         ctx.font = fontSize + 'px monospace';
-
         for (let i = 0; i < rainDrops.length; i++) {
-            const text = alphabet[Math.floor(Math.random() * alphabet.length)];
+            const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
             ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
-
-            if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                rainDrops[i] = 0;
-            }
+            if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) rainDrops[i] = 0;
             rainDrops[i]++;
         }
     }
     setInterval(drawMatrix, 30);
 
-    // LOGIN
+    // --- LOGIN LOGIC ---
     function startLoginProcess() {
         const u = document.getElementById('user').value;
         const p = document.getElementById('pass').value;
         const log = document.getElementById('statusLog');
 
-        log.innerHTML = "";
-
-        if (u === "admin" && p === "1234") {
+        if(u === "admin" && p === "1234") {
             const steps = [
                 "> Bypassing Firewall...",
-                "> Connecting to Server...",
+                "> Handshaking with Satellite...",
                 "> Decrypting Doctor Database...",
-                "> Access Granted..."
+                "> Access Granted. Loading System..."
             ];
-
             let i = 0;
-
             const timer = setInterval(() => {
-                if (i < steps.length) {
+                if(i < steps.length) {
                     log.innerHTML += `<div>${steps[i]}</div>`;
                     i++;
                 } else {
@@ -60,14 +191,141 @@
                     }, 800);
                 }
             }, 600);
-
         } else {
-            log.innerHTML = "<div style='color:red'>> ERROR: ACCESS DENIED</div>";
+            log.innerHTML = "<div style='color:red'>> ERROR: ACCESS DENIED.</div>";
         }
     }
 
-    // DATA
-    const doctorData = [...doctorData]; // keep your existing array
+    // --- DOCTOR DATASET ---
+    const doctorData = [
+        "Khalid . Wani | CIP5085144B | Consulting Physician MD INTERNAL MEDICINE | SRINAGAR 190005",
+        "MOHSIN BIN MUSHTAQ | CIP4967916B | GENERAL PHYSICIAN MD INTERNAL MEDICINE | SRINAGAR 190010",
+        "Manzoor Ahmad Chalkoo | B 3 | Urologists DNB UROLOGY | SRINAGAR 190010",
+        "Mohd Ashraf Lone | B 2 | LAPAROSCOPIC SURGEON DNB GEN SURGERY | SRINAGAR 190003",
+        "Muzaffar Nazir | B 2 | PHYSICIAN GENERAL MEDICINE | SRINAGAR 190003",
+        "Muzzafar Zargar | B 2 | GENERAL PHYSICIAN M D GEN MED | SRINAGAR 190003",
+        "Nisar Ahmad Shah | CIP5192633B | SURGEON MBBS MS | SRINAGAR 190003",
+        "Shahzada . Parray | CIP4852102B | Consulting Physician MD INTERNAL MEDICINE | SRINAGAR 190003",
+        "AKIL Latif Lone | CIP4979390B | SURGEON MS GENERAL SURGERY | SRINAGAR (NORTH) 190011",
+        "Aashaq . Hussain | CIP4851640B | SURGEON MBBS | SRINAGAR 190010",
+        "Abbas Khan | CIP5136951B | NEPHROLOGIST DM NEPHROLOGY | SRINAGAR 190010",
+        "Abid Sheik | CIP5136937B | NEPHROLOGIST DM NEPHROLOGY | SRINAGAR 190010",
+        "Abid Wani | CIP4855568B | UROLOGIST M Ch UROLOGY | PULWAMA 192301",
+        "Adil . Beigh | CIP4852330B | Consulting Physician DM NEPHROLOGY | SRINAGAR 190004",
+        "Aisha Kouser | CIP5141446B | GENERAL PHYSICIAN MD INTERNAL MEDICINE | ANANTNAG 192101",
+        "Ajaz Ah Malyar | CIP5124994B | UROLOGIST M Ch UROLOGY | SRINAGAR 190010",
+        "Akash Ahmadshah | CIP5260154B | SURGEON MS GENERAL SURGERY | SRINAGAR 190003",
+        "Akhtar . Ganie | CIP5192625B | SURGEON MS GENERAL SURGERY | SRINAGAR 190003",
+        "Amir Bashir | CIP5141447B | UROLOGIST M Ch UROLOGY | SRINAGAR 190011",
+        "Arif Hameed | CIP4852381B | Consulting Physician M Ch UROLOGY | SRINAGAR (NORTH) 190011",
+        "Ashiq H Bhat | CIP5124991B | UROLOGIST M Ch UROLOGY | SRINAGAR 190010",
+        "Azhar Ajaz Khan | CIP4895009B | UROLOGIST MS DNB UROLOGY | SRINAGAR 190010",
+        "Bakhtiar Asif Drabu | CIP4845264 B | Consulting Physician MBBS | SRINAGAR 190010",
+        "Baldev Singh Wazir | CIP4855858B | UROLOGIST MS DNB UROLOGY | HANDWARA 190001",
+        "Baldev Singh Wazir | CIP4999765B | NEUROLOGIST MS DNB UROLOGY | SRINAGAR 190010",
+        "Basharat . Rather | CLX597182B | Consulting Physician MBBS | SRINAGAR 190005",
+        "Bashrat Kasana | CIP5136941B | Consulting Physician MD GENERAL MEDICINE | SRINAGAR 190010",
+        "Dr Adnan | CIP5260157B | SURGEON MS GENERAL SURGERY | SRINAGAR (NORTH) 191201",
+        "FAHEEM Ui Islam | CIP4975460B | UROLOGIST M Ch UROLOGY | SRINAGAR (NORTH) 190011",
+        "FIRDOUS Ahmad Beigh | CIP4970525B | UROLOGIST MS DNB UROLOGY | SRINAGAR (NORTH) 190011",
+        "Farhana Siraj | CIP4852070B | Consulting Physician MD INTERNAL MEDICINE | SRINAGAR (NORTH) 190011",
+        "Fawad Sidiq | CIP4858824B | UROLOGIST M Ch UROLOGY | SRINAGAR 190010",
+        "Fayaz Ahmad Vaar | CIP5136954B | NEPHROLOGIST DM NEPHROLOGY | SRINAGAR 190010",
+        "Ghulam Hassan Sheikh | CIP4855634B | CHEST PHYSICIAN MBBS MD | Sopore 193202",
+        "Gokul K | CIP5260158B | UROLOGIST M Ch UROLOGY | SRINAGAR 190009",
+        "Hamid Rasool | CIP4885607B | UROLOGIST M Ch UROLOGY | SRINAGAR 190010",
+        "IMTIYAZ AHMAD SOFI | CIP5124832B | UROLOGIST MS DNB UROLOGY | SRINAGAR 190011",
+        "Imran Muzaffar | CIP5136936B | Consulting Physician MD GENERAL MEDICINE | SRINAGAR (NORTH) 190015",
+        "Imran Sofi | CIP5136947B | NEPHROLOGIST DM NEPHROLOGY | SRINAGAR 190010",
+        "Imtiyaz Mantoo | CIP5258983B | UROLOGIST MS DNB UROLOGY | SRINAGAR 190009",
+        "Imtiyaz Wani | CIR11392 B | Consulting Physician MBBS | SRINAGAR (NORTH) 190011",
+        "Iqtibaas Ahmad | CIP4858830B | UROLOGIST M Ch UROLOGY | SRINAGAR 190006",
+        "Irshad . Kuchay | CIP4851642B | SURGEON MS GENERAL SURGERY | PAMPORA 192121",
+        "Ishrat . Hussain | CIP4855829B | Consulting Physician MD | SRINAGAR 190010",
+        "Javaid Magray | CIP5136942B | UROLOGIST MS DNB UROLOGY | SRINAGAR 190010",
+        "Javeed Magray | CIP4852361B | Consulting Physician MBBS | SRINAGAR 190010",
+        "Javeed Qadiri | CIP4858819B | UROLOGIST M Ch UROLOGY | SRINAGAR 190006",
+        "Javeed Qadiri | CIP5136940B | UROLOGIST MS DNB UROLOGY | SRINAGAR 190010",
+        "Javid Ahmad | CIP5136956B | Consulting Physician MD GENERAL MEDICINE | SRINAGAR (NORTH) 193121",
+        "Javvid . Muzamil | CIP4798570B | ONCO SURGEON MD MS ONCO | SRINAGAR 190010",
+        "Kaleem | CIP5136939B | UROLOGIST MS DNB UROLOGY | SRINAGAR 190010",
+        "Khursheed . Bhat | CIP4852052B | Consulting Physician MD INTERNAL MEDICINE | BARAMULA 193101",
+        "Khursheed Ahmed Banday | CIP4855534B | Consulting Physician DM NEPHROLOGY | SRINAGAR 190015",
+        "Lateef . Ahmad | CIP4858965B | SURGEON MS GENERAL SURGERY | SOPORE 193201",
+        "Lone Abdul Rashid | CIP4858966B | ONCO SURGEON MD MS ONCO | SRINAGAR 190015",
+        "MUDASIR Ahmad Tantray | CIP4970516B | UROLOGIST MS DNB UROLOGY | SRINAGAR (NORTH) 190011",
+        "Malik . Munfat | CIP4855802B | UROLOGIST M Ch UROLOGY | SRINAGAR 190003",
+        "Malikrouf . . | CIP4953737B | UROLOGIST MS DNB UROLOGY | ANANTNAG 192101",
+        "Manzoor . Lone | CIP4851754B | SURGEON MS GENERAL SURGERY | SOPORE 193201",
+        "Manzoor Ahmad Dar | CIP4855508B | UROLOGIST M Ch UROLOGY | PULWAMA 192301",
+        "Marbit Khan | CIP5136944B | UROLOGIST MBBS | SRINAGAR 190010",
+        "Mir Imran | CIP4852339B | Consulting Physician MBBS | SRINAGAR (NORTH) 190011",
+        "Mohammad Ismaiel | CIP4855901B | Consulting Physician MBBS | SRINAGAR 190010",
+        "Mohammad Lateef Wani | CIP5136958B | NEPHROLOGIST DM NEPHROLOGY | SRINAGAR 190010",
+        "Mohammad Shafi Wani | CIP4851684B | UROLOGIST MS DNB UROLOGY | SRINAGAR 190003",
+        "Mohammed Bhat | CIW737961B | Consulting Physician MBBS | SRINAGAR (NORTH) 190011",
+        "Mohmad . Ayoub | CIP4851638B | SURGEON MS GENERAL SURGERY | PULWAMA 192301",
+        "Mubashir . Hajini | CIP4858822B | Consulting Physician MD | SOPORE 193201",
+        "Mufti . Mehmood | CIP4855899B | UROLOGIST M Ch UROLOGY | SRINAGAR 190010",
+        "Mujhail Mir | CIP5141445B | UROLOGIST MS DNB UROLOGY | ANANTNAG 192101",
+        "Muneer Khan | CIP4858820B | UROLOGIST M Ch UROLOGY | HANDWARA 190001",
+        "Muneer . Lone | CIP4855812B | Consulting Physician MD INTERNAL MEDICINE | SRINAGAR 190004",
+        "Murtaza Khan | CIP5136957B | NEPHROLOGIST DM NEPHROLOGY | SRINAGAR 190010",
+        "Mushtaq Ahmad Chalkoo | CIP4855826B | SURGEON MBBS | HANDWARA 190001",
+        "Muzaffar Maqsood Wani | CIP4852392B | Consulting Physician DM NEPHROLOGY | SRINAGAR (NORTH) 190011",
+        "Muzamil Wani | CIP5136945B | NEPHROLOGIST DM NEPHROLOGY | SRINAGAR 190010",
+        "NAVEED KHAN | CIP5059270B | UROLOGIST M Ch UROLOGY | SRINAGAR 190005",
+        "Naseer . Awan | CIP4855788B | SURGEON MS GENERAL SURGERY | SRINAGAR 190005",
+        "Naveed . Khan | CIP4852334B | UROLOGIST MBBS | SRINAGAR 190004",
+        "Nissar Shamas | CIP5258982B | Consulting Physician MD INTERNAL MEDICINE | SRINAGAR 190003",
+        "Omer Hafiz | CIP4845268B | Consulting Physician MD GENERAL MEDICINE | SRINAGAR 190011",
+        "Omer Mukhtar | CIP5144165B | UROLOGIST MS DNB UROLOGY | SRINAGAR 190011",
+        "Omer Saleem | CIP5136953B | UROLOGIST MS DNB UROLOGY | SRINAGAR 190010",
+        "Omer . Saleem | CIP4855902B | UROLOGIST M Ch UROLOGY | SRINAGAR 190010",
+        "Owais Qadiri | CIP5144166B | UROLOGIST MS DNB UROLOGY | SRINAGAR 190011",
+        "Prince Ahmad | CIP4855935B | UROLOGIST MS DNB UROLOGY | SRINAGAR (NORTH) 190011",
+        "Prince MuzafaSani | CIP5141448B | UROLOGIST M Ch UROLOGY | SRINAGAR 190009",
+        "Rabi Ahmad | CIP5136938B | NEPHROLOGIST DM NEPHROLOGY | SRINAGAR 190010",
+        "Rahul Singh | CIP4851867B | UROLOGIST MS DNB UROLOGY | SRINAGAR 190010",
+        "Rameez | CIP5258981B | Consulting Physician MD INTERNAL MEDICINE | SRINAGAR (NORTH) 191201",
+        "Ravinder Singh Bali | CIP4855688B | Consulting Physician MBBS | BARAMULA 193101",
+        "Rouf Khawaja | CIP4858827B | UROLOGIST MS DNB UROLOGY | SRINAGAR (NORTH) 190011",
+        "SAQIB Mahdi | CIP4998872B | UROLOGIST M Ch UROLOGY | SRINAGAR (NORTH) 190011",
+        "SYED Shahnawaz | CIP4855898B | UROLOGIST M Ch UROLOGY | SRINAGAR 190010",
+        "SYED Adil Andrabi | CIP5260155B | UROLOGIST M Ch UROLOGY | SRINAGAR 190009",
+        "Sajad Parra | CIP4858828B | UROLOGIST M Ch UROLOGY | SRINAGAR (NORTH) 190011",
+        "Sajad Ah Malik | CIP4941797B | UROLOGIST M Ch UROLOGY | SRINAGAR (NORTH) 190011",
+        "Sajid Bazaz | CIP4852314B | UROLOGIST MS DNB UROLOGY | SRINAGAR (NORTH) 193101",
+        "Sajid Bazaz | CIP4941796B | UROLOGIST MS DNB UROLOGY | SRINAGAR 190006",
+        "Sajjad Bazaz | CIP5136949B | UROLOGIST MS DNB UROLOGY | SRINAGAR 190010",
+        "Saleem Wani | CIP4852386B | Consulting Physician MD GENERAL MEDICINE | SRINAGAR (NORTH) 190011",
+        "Shabir Ahmad Mir | CIP5124971B | UROLOGIST MS DNB UROLOGY | SRINAGAR 190010",
+        "Shahnawaz . Rasool | CIP4972460B | UROLOGIST MBBS | Sopore 193201",
+        "Sheik Reyaz | CIP5141449B | UROLOGIST MS DNB UROLOGY | SRINAGAR 190009",
+        "Sheik Ubaid | CIP5258978B | Consulting Physician MD GENERAL MEDICINE | SRINAGAR (NORTH) 193101",
+        "Sheikh . Aijaz | CIP4855616B | ONCO SURGEON DM ONCOLOGY | SRINAGAR 190008",
+        "Suhail Ahmad | CIP4852380B | Consulting Physician MD GENERAL MEDICINE | SRINAGAR (NORTH) 190011",
+        "Suhail Mantoo | CIP4851995B | Consulting Physician MD | SRINAGAR (NORTH) 190011",
+        "Suhail Sangeen | CIP5258980B | SURGEON MS GENERAL SURGERY | SRINAGAR (NORTH) 191201",
+        "Suhail Masood Khan | CIP4969595B | UROLOGIST M Ch UROLOGY | SOPORE 193201",
+        "Syed Shakeeb | CIP5260156B | UROLOGIST M Ch UROLOGY | SRINAGAR 190011",
+        "Syed Sajad Nazir | CIP4855900B | UROLOGIST M Ch UROLOGY | SRINAGAR 190010",
+        "TAJAMUL Hassan | CIP4986103B | UROLOGIST MS DNB UROLOGY | SRINAGAR (NORTH) 190011",
+        "TUFEEL Ahmad Khan | CIP4970535B | UROLOGIST M Ch UROLOGY | SRINAGAR (NORTH) 190011",
+        "Tahir Tahir Ahmad | CIP5136952B | UROLOGIST MBBS | SRINAGAR 190010",
+        "Tajamul Hussain | CIP4852148B | NEPHROLOGIST DM NEPHROLOGY | SRINAGAR 190010",
+        "Tanveer . Iqbal | CIP4855833B | UROLOGIST M Ch UROLOGY | SRINAGAR 190010",
+        "Tariq . Ahmad | CIP5035002B | Consulting Physician MBBS | SRINAGAR 190018",
+        "Ubair Qayoom | CIP5258984B | Consulting Physician MD GENERAL MEDICINE | SRINAGAR (NORTH) 193101",
+        "Waseem Ashraf | CIP5136955B | UROLOGIST MS DNB UROLOGY | SRINAGAR 190010",
+        "YASIR Iqbal | CIP4978395B | UROLOGIST M Ch UROLOGY | SRINAGAR 190010",
+        "YOUNIS Mushtaq | CIP4975459B | UROLOGIST MS DNB UROLOGY | SRINAGAR (NORTH) 190011",
+        "Yasir . Qadri | CIP5125005B | UROLOGIST MS DNB UROLOGY | SRINAGAR 190010",
+        "Zahid Mohd Rather | CIP4851659B | UROLOGIST MS GENERAL SURGERY | ANANTNAG 192101",
+        "Zahoor Ah Gilkar | CIP4855698B | UROLOGIST M Ch UROLOGY | MOHMMAD PORA 192231",
+        "Zaid Rather | CIP5136950B | UROLOGIST MS DNB UROLOGY | ANANTNAG 192101",
+        "saba Ulalam | CIP5258979B | UROLOGIST M Ch UROLOGY | SRINAGAR"
+    ];
 
     let visits = JSON.parse(localStorage.getItem("visits") || "[]");
     let currentLoc = null;
@@ -75,10 +333,8 @@
     function load(list) {
         const listDiv = document.getElementById("list");
         listDiv.innerHTML = "";
-
         list.forEach(item => {
             const parts = item.split('|');
-
             listDiv.innerHTML += `
                 <div class="card">
                     <span class="dr-name">${parts[0]}</span>
@@ -89,7 +345,6 @@
                     </div>
                 </div>`;
         });
-
         document.getElementById("countLabel").innerText = `Found ${list.length} Doctors`;
     }
 
@@ -102,47 +357,28 @@
     function getLocation() {
         navigator.geolocation.getCurrentPosition(pos => {
             currentLoc = pos.coords;
-
             document.getElementById("map").innerHTML = `
-                <iframe width="100%" height="100%" frameborder="0"
-                src="https://maps.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}&z=15&output=embed">
-                </iframe>`;
-        }, () => {
-            alert("Enable GPS permission!");
-        });
+                <iframe width="100%" height="100%" frameborder="0" 
+                src="https://maps.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}&z=15&output=embed"></iframe>`;
+        }, () => alert("GPS access denied. Check permissions."));
     }
 
     function saveVisit() {
-        if (!currentLoc) {
-            alert("Click GPS first!");
-            return;
-        }
-
-        visits.push({
-            date: new Date().toLocaleDateString(),
-            time: new Date().toLocaleTimeString(),
-            lat: currentLoc.latitude,
-            lng: currentLoc.longitude
-        });
-
+        if(!currentLoc) return alert("Get GPS location first!");
+        visits.push({ date: new Date().toLocaleDateString(), time: new Date().toLocaleTimeString(), lat: currentLoc.latitude, lng: currentLoc.longitude });
         localStorage.setItem("visits", JSON.stringify(visits));
-        alert("Visit Saved ✅");
+        alert("Visit Saved locally.");
     }
 
     function exportExcel() {
-        if (visits.length === 0) {
-            alert("No data!");
-            return;
-        }
-
-        let csv = "Date,Time,Lat,Lng\n" +
-            visits.map(v => `${v.date},${v.time},${v.lat},${v.lng}`).join("\n");
-
+        if(visits.length === 0) return alert("No visits recorded.");
+        let csv = "Date,Time,Lat,Lng\n" + visits.map(v => `${v.date},${v.time},${v.lat},${v.lng}`).join("\n");
         let blob = new Blob([csv], { type: 'text/csv' });
         let a = document.createElement("a");
-
         a.href = URL.createObjectURL(blob);
         a.download = "Visits_Report.csv";
         a.click();
     }
 </script>
+</body>
+</html>
