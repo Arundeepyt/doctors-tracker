@@ -1,4 +1,4 @@
-​Gemini said
+​
 Arundeep Doctor Tracker Pro
 A high-performance, mobile-first web application designed for Medical Representatives (RMs) to track doctor visits, capture real-time GPS coordinates, and manage a directory of over 125 specialists.
 
