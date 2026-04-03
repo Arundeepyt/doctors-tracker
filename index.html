@@ -70,7 +70,7 @@
             padding-top: 10px;
         }
 
-        /* MAIN APP UI  */
+        /* --- MAIN APP UI --- */
         #mainPage { 
             display: none; position: relative; z-index: 20; 
             background: #f4f7f6; min-height: 100vh; font-family: 'Segoe UI', sans-serif; color: #333;
@@ -129,7 +129,7 @@
         <div class="terminal-header">ARUNDEEP_SYSTEMS :: SECURE_ACCESS</div>
         <div id="loginForm">
             <label style="font-size: 10px; opacity: 0.8;">USER_IDENTITY:</label>
-            <input id="user" class="hacker-input" placeholder="arundeep" autocomplete="off">
+            <input id="user" class="hacker-input" placeholder="admin" autocomplete="off">
             <label style="font-size: 10px; opacity: 0.8;">AUTH_KEY:</label>
             <input id="pass" type="password" class="hacker-input" placeholder="****">
             <button class="hacker-btn" onclick="startLoginProcess()">Initialize Access</button>
@@ -171,7 +171,7 @@
 </div>
 
 <script>
-    // MATRIX ANIMATION 
+    // --- MATRIX ANIMATION ---
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
@@ -195,7 +195,7 @@
     }
     let matrixInterval = setInterval(drawMatrix, 30);
 
-    //  LOGIN LOGIC 
+    // --- LOGIN LOGIC ---
     function startLoginProcess() {
         const u = document.getElementById('user').value;
         const p = document.getElementById('pass').value;
@@ -231,7 +231,7 @@
         }
     }
 
-    //  FULL DOCTOR DATASET 
+    // --- FULL DOCTOR DATASET ---
     const doctorData = [
         "Khalid . Wani | CIP5085144B | Consulting Physician MD INTERNAL MEDICINE | SRINAGAR 190005",
         "MOHSIN BIN MUSHTAQ | CIP4967916B | GENERAL PHYSICIAN MD INTERNAL MEDICINE | SRINAGAR 190010",
