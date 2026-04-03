@@ -14,9 +14,9 @@ GPS Visit Validation: One-click location fetching via Google Maps API.
 Data Portability: Save visits locally and export them to a .csv report for Excel.
 
 🔑 Credentials
-User ID: admin
+User ID: 
 
-Access Token: 1234
+Access Token: 
 
 🛠️ Tech Stack
 Frontend: HTML5, CSS3, JavaScript (ES6+)
