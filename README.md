@@ -1,36 +1,55 @@
-​⚡ SYSTEM_TRACKER_PRO (v2.0)
-​Neural Link Doctor Management & GPS Tracking Interface
-​A high-performance, Matrix-themed web application designed for secure doctor database management, real-time GPS synchronization, and clinical visit logging.
-​🛠️ CORE_FEATURES
-​Neural Authentication: Secure login interface with terminal-style handshake protocols.
-​Matrix Stream: Integrated 16px monospace digital rain background for aesthetic immersion.
-​Live Satellite Sync: Real-time Geolocation fetching with precise Latitude/Longitude coordinate mapping.
-​Visit Ledger: Instant visit logging with automated timestamps and Google Maps integration.
-​Data Extraction: One-click "Data Dump" to .xlsx (Excel) using the SheetJS library.
-​Adaptive UI: Fully responsive glass-morphism panels optimized for both desktop and mobile field-use.
-​🚀 DEPLOYMENT_INSTRUCTIONS
-​1. Initialization
-​Clone the repository or save the source code as index.html.
+​Gemini said
+Arundeep Doctor Tracker Pro
+A high-performance, mobile-first web application designed for Medical Representatives (RMs) to track doctor visits, capture real-time GPS coordinates, and manage a directory of over 125 specialists.
 
-​📂 DIRECTORY_STRUCTURE
+🛡️ Features
+Matrix Terminal Access: A secure, animated "hacker-style" login interface.
 
+Product Pitch Quick-View: Instant access to the "Speed Pitch" for Sliorap and the "Volume Pitch" for Finzap at the top of the dashboard.
 
-ROOT/
-├── index.html        # Main Application (Logic, Style, Structure)
-└── README.md         # System Documentation
+Live Doctor Database: Searchable list of 125+ doctors including ID numbers, specialties, and locations.
 
+GPS Visit Validation: One-click location fetching via Google Maps API.
 
+Data Portability: Save visits locally and export them to a .csv report for Excel.
 
+🔑 Credentials
+User ID: admin
 
+Access Token: 1234
 
+🛠️ Tech Stack
+Frontend: HTML5, CSS3, JavaScript (ES6+)
 
+Visuals: HTML5 Canvas (Matrix Rain Effect)
 
-📊 TECHNICAL_SPECIFICATIONS
-​Engine: HTML5 / CSS3 / Vanilla JavaScript
-​Visuals: Canvas API (Matrix Rain)
-​Data Handling: JSON-based doctor registry (J&K Region)
-​GPS Logic: navigator.geolocation Web API
-​WARNING: Unauthorized access to the core database is strictly monitored. Ensure GPS is synced before attempting to log clinical visits for data integrity.
-​"The code is the law."
+Storage: Browser localStorage (No database required for local tracking)
+
+Maps: Google Maps Embed API
+
+🚀 How to Use
+Login: Enter the credentials to initiate the terminal bypass sequence.
+
+Pitch: Review the product pitches at the top before meeting the doctor.
+
+Search: Use the search bar to find a doctor by name, specialty, or PIN code.
+
+Track: * Click Step 1: Get GPS Location to verify your presence.
+
+Click Save Visit to log the timestamp and coordinates.
+
+Report: Click Export Data at the end of the day to download your visit logs.
+
+📂 File Structure
+Plaintext
+/
+├── index.html       # Single-file application (Code, Styles, Logic)
+└── README.md        # Documentation
+📝 Product Pitches (RM Quick-Reference)
+Sliorap (Silodosin): Highly Selective Alpha-1A Blocker. Targets prostate specifically for faster relief with minimal dizziness.
+
+Finzap (Finasteride): 5-Alpha Reductase Inhibitor. Blocks DHT conversion to treat the actual cause of prostate enlargement.
+
+© 2026 Arundeep Systems. All Rights Reserved.
 ❎️ And  its for Profesional  work ⚠️only 
  
