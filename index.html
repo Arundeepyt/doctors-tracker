@@ -3,27 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peaks Auto | Field Force Automation</title>
+    <title>Peaks Auto | Automation v4.4</title>
     <style>
-        :root { --bg: #f4f7f6; --text: #333; --card-bg: #ffffff; --matrix-green: #00ff41; --primary: #003366; --accent: #e31e24; }
-        [data-theme='dark'] { --bg: #000800; --text: #00ff41; --card-bg: #001100; --primary: #00ff41; --accent: #008f11; }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Segoe UI', sans-serif; background-color: var(--bg); color: var(--text); transition: 0.3s; overflow-x: hidden; }
-        #canvas { position: fixed; top: 0; left: 0; z-index: 1; background: #000; }
-        #loginPage { position: relative; z-index: 10; height: 100vh; display: flex; justify-content: center; align-items: center; }
-        .terminal-box { background: rgba(0, 10, 0, 0.95); border: 2px solid var(--matrix-green); box-shadow: 0 0 25px var(--matrix-green); width: 90%; max-width: 400px; padding: 30px; border-radius: 10px; text-align: center; }
-        .hacker-input { width: 100%; background: transparent; border: 1px solid var(--matrix-green); color: var(--matrix-green); padding: 12px; margin: 10px 0; outline: none; font-family: 'Courier New', monospace; box-sizing: border-box; }
-        .hacker-btn { width: 100%; background: var(--matrix-green); color: black; border: none; padding: 15px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; margin-top: 10px; }
-        #mainPage { display: none; position: relative; z-index: 20; }
-        header { padding: 15px; text-align: center; font-weight: bold; background: var(--primary); color: white; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 30; }
-        .container { padding: 15px; max-width: 600px; margin: auto; padding-bottom: 100px; }
-        #liveStats { background: #000; color: var(--matrix-green); padding: 12px; border-radius: 8px; font-size: 11px; margin-bottom: 15px; border: 1px solid #333; line-height: 1.6; font-family: 'Courier New', monospace; }
-        .card { background: var(--card-bg); padding: 15px; border-radius: 12px; margin-bottom: 12px; border-left: 6px solid var(--accent); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .app-btn { width: 100%; padding: 15px; margin: 8px 0; border: none; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; color: white; transition: 0.2s; }
+        :root { 
+            --bg: #f4f7f6; --text: #1a1a1a; --card-bg: #ffffff; 
+            --matrix-green: #00ff41; --primary: #003366; --accent: #e31e24; 
+        }
+        [data-theme='dark'] { 
+            --bg: #0a0a0a; --text: #00ff41; --card-bg: #111; 
+            --primary: #00ff41; --accent: #008f11; 
+        }
+
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            font-family: 'Segoe UI', sans-serif; 
+            background-color: var(--bg); color: var(--text); 
+            transition: 0.3s; 
+        }
+
+        /* Fixed Background layer */
+        #canvas { position: fixed; top: 0; left: 0; z-index: 0; background: #000; }
+
+        /* Login Layer */
+        #loginPage { 
+            position: relative; z-index: 10; height: 100vh; 
+            display: flex; justify-content: center; align-items: center; 
+        }
+        .terminal-box { 
+            background: rgba(0, 10, 0, 0.9); border: 2px solid var(--matrix-green); 
+            padding: 30px; border-radius: 10px; text-align: center; width: 320px;
+        }
+
+        /* Main App Layer - Ensuring it stays above the matrix */
+        #mainPage { 
+            display: none; position: relative; z-index: 10; 
+            min-height: 100vh; background-color: var(--bg);
+        }
+
+        header { 
+            padding: 15px; background: var(--primary); color: white; 
+            display: flex; justify-content: space-between; align-items: center; 
+        }
+
+        .container { padding: 20px; max-width: 800px; margin: auto; }
+
+        #liveStats { 
+            background: #000; color: var(--matrix-green); padding: 15px; 
+            border-radius: 8px; font-family: monospace; font-size: 12px; margin-bottom: 20px;
+        }
+
+        .app-btn { 
+            width: 100%; padding: 15px; margin: 10px 0; border: none; 
+            border-radius: 8px; font-weight: bold; cursor: pointer; color: #fff;
+        }
         .btn-green { background: #28a745; }
-        .btn-green:disabled { background: #555; cursor: not-allowed; opacity: 0.6; }
+        .btn-green:disabled { background: #444; cursor: not-allowed; }
         .btn-gold { background: #ffc107; color: #000; }
-        #map { height: 250px; border-radius: 12px; margin: 15px 0; background: #222; overflow: hidden; border: 2px solid var(--primary); }
-        #search { width: 100%; padding: 15px; border-radius: 10px; border: 1px solid #ccc; margin-bottom: 15px; box-sizing: border-box; }
+
+        #map { 
+            height: 300px; border-radius: 10px; border: 2px solid var(--primary); 
+            margin: 20px 0; background: #222; overflow: hidden;
+        }
+
+        .theme-btn { 
+            padding: 5px 15px; border-radius: 5px; border: 1px solid #fff; 
+            background: transparent; color: #fff; cursor: pointer; 
+        }
     </style>
 </head>
 <body>
@@ -32,112 +77,113 @@
 
 <div id="loginPage">
     <div class="terminal-box">
-        <div style="font-size:14px; color:var(--matrix-green); margin-bottom:15px; font-weight: bold;">PEAKS AUTO :: FIELD FORCE v4.3</div>
-        <input id="user" class="hacker-input" placeholder="EMPLOYEE_ID">
-        <input id="pass" type="password" class="hacker-input" placeholder="ACCESS_TOKEN">
-        <button class="hacker-btn" onclick="startLoginProcess()">Initialize</button>
+        <h3 style="color: var(--matrix-green);">PEAKS AUTO v4.4</h3>
+        <input id="user" type="text" style="width:100%; padding:10px; margin:10px 0;" placeholder="EMPLOYEE_ID">
+        <input id="pass" type="password" style="width:100%; padding:10px; margin:10px 0;" placeholder="ACCESS_TOKEN">
+        <button class="hacker-btn" style="width:100%; padding:12px; background:var(--matrix-green); color:#000; border:none; cursor:pointer;" onclick="startLogin()">SYNC SYSTEM</button>
     </div>
 </div>
 
 <div id="mainPage">
-    <header><span id="welcomeMsg">Staff: GUEST</span></header>
+    <header>
+        <span id="welcome">Staff: GUEST</span>
+        <button class="theme-btn" onclick="toggleMode()">🌓 THEME</button>
+    </header>
+
     <div class="container">
         <div id="liveStats">
-            <div>[MONITORING]: <span id="gpsStatus" style="color:#ff4141">CONNECTING...</span></div>
-            <div>[ADDRESS]: <span id="readableAddr" style="color:white">Waiting for Sat-Link...</span></div>
+            <div>[STATUS]: <span id="status" style="color:red">OFFLINE</span></div>
+            <div>[STREET]: <span id="addr" style="color:white">Waiting for GPS...</span></div>
         </div>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-            <button id="logBtn" class="app-btn btn-green" onclick="saveVisit()" disabled>💾 WAITING FOR GPS</button>
-            <button class="app-btn btn-gold" onclick="exportExcel()">📊 EXPORT CSV</button>
+
+        <div style="display: flex; gap: 15px;">
+            <button id="logBtn" class="app-btn btn-green" onclick="doLog()" disabled>WAITING FOR GPS</button>
+            <button class="app-btn btn-gold" onclick="doExport()">DOWNLOAD CSV</button>
         </div>
-        
+
         <div id="map"></div>
-        <div id="list"></div>
     </div>
 </div>
 
 <script>
-    // Matrix BG
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
+    let user = "Unknown";
+    let logs = JSON.parse(localStorage.getItem("peaks_logs") || "[]");
+    let currentPos = null;
+    let currentAddr = null;
+
+    // Matrix effect
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-    const alphabet = "10"; const fontSize = 16;
-    const columns = canvas.width / fontSize;
-    const rainDrops = Array.from({ length: columns }).fill(1);
-    function drawMatrix() {
-        ctx.fillStyle = 'rgba(0, 8, 0, 0.05)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#0F0'; ctx.font = fontSize + 'px monospace';
-        for (let i = 0; i < rainDrops.length; i++) {
-            const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-            ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
-            if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) rainDrops[i] = 0;
-            rainDrops[i]++;
-        }
+    const drops = Array(Math.floor(canvas.width/16)).fill(1);
+    function matrix() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#0F0'; ctx.font = '16px monospace';
+        drops.forEach((y, i) => {
+            ctx.fillText("01"[Math.floor(Math.random()*2)], i*16, y*16);
+            if(y*16 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+            drops[i]++;
+        });
     }
-    setInterval(drawMatrix, 30);
+    setInterval(matrix, 35);
 
-    let activeUser = "Unknown";
-    let visits = JSON.parse(localStorage.getItem("visits") || "[]");
-    let currentLoc = null;
-    let currentAddress = null;
+    function toggleMode() {
+        const body = document.body;
+        body.setAttribute('data-theme', body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    }
 
-    function startLoginProcess() {
-        const u = document.getElementById('user').value.trim();
-        const p = document.getElementById('pass').value.trim();
-        if(u !== "" && p === "1234") {
-            activeUser = u;
-            document.getElementById('welcomeMsg').innerText = `Staff: ${u.toUpperCase()}`;
+    function startLogin() {
+        const u = document.getElementById('user').value;
+        const p = document.getElementById('pass').value;
+        if(u && p === "1234") {
+            user = u;
+            document.getElementById('welcome').innerText = "Staff: " + u.toUpperCase();
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('mainPage').style.display = 'block';
-            forceStartTracking();
+            initGPS();
         }
     }
 
-    function forceStartTracking() {
-        navigator.geolocation.watchPosition(async (pos) => {
-            currentLoc = pos.coords;
-            const lat = pos.coords.latitude; const lng = pos.coords.longitude;
-            document.getElementById('gpsStatus').innerText = "SIGNAL_LOCKED";
-            document.getElementById('gpsStatus').style.color = "#00ff41";
-            document.getElementById("map").innerHTML = `<iframe width="100%" height="100%" frameborder="0" src="https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed"></iframe>`;
+    function initGPS() {
+        navigator.geolocation.watchPosition(async (p) => {
+            currentPos = p.coords;
+            const lat = p.coords.latitude; const lng = p.coords.longitude;
+            document.getElementById('status').innerText = "SIGNAL_LOCKED";
+            document.getElementById('status').style.color = "#00ff41";
+            document.getElementById('map').innerHTML = `<iframe width="100%" height="100%" frameborder="0" src="https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed"></iframe>`;
 
             try {
-                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`);
-                const data = await res.json();
-                currentAddress = data.display_name || "Address Found";
-                document.getElementById('readableAddr').innerText = currentAddress;
-                
-                // UNLOCK BUTTON ONLY WHEN DATA IS READY
-                const logBtn = document.getElementById('logBtn');
-                logBtn.disabled = false;
-                logBtn.innerText = "💾 LOG VISIT";
-            } catch (e) { }
-        }, null, { enableHighAccuracy: true });
+                const r = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+                const d = await r.json();
+                currentAddr = d.display_name || "Srinagar Area";
+                document.getElementById('addr').innerText = currentAddr;
+                document.getElementById('logBtn').disabled = false;
+                document.getElementById('logBtn').innerText = "💾 LOG VISIT";
+            } catch(e) {}
+        }, null, {enableHighAccuracy: true});
     }
 
-    function saveVisit() {
-        const cleanVisit = {
-            employee: activeUser,
+    function doLog() {
+        logs.push({
+            staff: user,
             date: new Date().toLocaleDateString(),
             time: new Date().toLocaleTimeString(),
-            lat: currentLoc.latitude.toFixed(6),
-            lng: currentLoc.longitude.toFixed(6),
-            addr: currentAddress.replace(/,/g, "")
-        };
-        visits.push(cleanVisit);
-        localStorage.setItem("visits", JSON.stringify(visits));
-        alert("Success: Verified Visit Logged.");
+            lat: currentPos.latitude,
+            lng: currentPos.longitude,
+            addr: currentAddr.replace(/,/g, "")
+        });
+        localStorage.setItem("peaks_logs", JSON.stringify(logs));
+        alert("Visit Logged for " + user);
     }
 
-    function exportExcel() {
-        let csv = "Employee,Date,Time,Latitude,Longitude,Address\n" + 
-                  visits.map(v => `${v.employee},${v.date},${v.time},${v.lat},${v.lng},"${v.addr}"`).join("\n");
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = `Peaks_Report_${activeUser}.csv`;
-        link.click();
+    function doExport() {
+        let csv = "Employee,Date,Time,Lat,Lng,Address\n" + 
+            logs.map(l => `${l.staff},${l.date},${l.time},${l.lat},${l.lng},"${l.addr}"`).join("\n");
+        const blob = new Blob([csv], {type: 'text/csv'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `Report_${user}.csv`;
+        a.click();
     }
 </script>
 </body>
