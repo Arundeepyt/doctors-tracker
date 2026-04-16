@@ -3,26 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peaks Auto | Field Force Tracking</title>
+    <title>Peaks Auto | Field Force Tracking v4.1</title>
     <style>
         :root { --bg: #f4f7f6; --text: #333; --card-bg: #ffffff; --matrix-green: #00ff41; --primary: #003366; --accent: #e31e24; }
         [data-theme='dark'] { --bg: #000800; --text: #00ff41; --card-bg: #001100; --primary: #00ff41; --accent: #008f11; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Segoe UI', sans-serif; background-color: var(--bg); color: var(--text); transition: 0.3s; overflow-x: hidden; }
         #canvas { position: fixed; top: 0; left: 0; z-index: 1; background: #000; }
+        
+        /* LOGIN UI */
         #loginPage { position: relative; z-index: 10; height: 100vh; display: flex; justify-content: center; align-items: center; }
         .terminal-box { background: rgba(0, 10, 0, 0.95); border: 2px solid var(--matrix-green); box-shadow: 0 0 25px var(--matrix-green); width: 90%; max-width: 400px; padding: 30px; border-radius: 10px; text-align: center; }
         .hacker-input { width: 100%; background: transparent; border: 1px solid var(--matrix-green); color: var(--matrix-green); padding: 12px; margin: 10px 0; outline: none; font-family: 'Courier New', monospace; box-sizing: border-box; }
         .hacker-btn { width: 100%; background: var(--matrix-green); color: black; border: none; padding: 15px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; margin-top: 10px; }
+        
+        /* MAIN APP UI */
         #mainPage { display: none; position: relative; z-index: 20; }
-        header { padding: 15px; text-align: center; font-weight: bold; background: var(--primary); color: white; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 30; }
+        header { padding: 15px; text-align: center; font-weight: bold; background: var(--primary); color: white; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 30; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
         .container { padding: 15px; max-width: 600px; margin: auto; padding-bottom: 100px; }
         .theme-toggle { background: rgba(255,255,255,0.2); border: 1px solid white; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 11px; }
+        
         #liveStats { background: #000; color: var(--matrix-green); padding: 12px; border-radius: 8px; font-size: 11px; margin-bottom: 15px; border: 1px solid #333; line-height: 1.6; font-family: 'Courier New', monospace; }
         .card { background: var(--card-bg); padding: 15px; border-radius: 12px; margin-bottom: 12px; border-left: 6px solid var(--accent); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .app-btn { width: 100%; padding: 15px; margin: 8px 0; border: none; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; color: white; transition: 0.2s; }
         .btn-green { background: #28a745; }
         .btn-gold { background: #ffc107; color: #000; }
-        #map { height: 250px; border-radius: 12px; margin: 15px 0; background: #333; overflow: hidden; border: 2px solid var(--primary); }
+        
+        #map { height: 250px; border-radius: 12px; margin: 15px 0; background: #222; overflow: hidden; border: 2px solid var(--primary); }
         #search { width: 100%; padding: 15px; border-radius: 10px; border: 1px solid #ccc; margin-bottom: 15px; box-sizing: border-box; font-size: 16px; }
         footer { position: fixed; bottom: 0; width: 100%; background: #000; text-align: center; padding: 10px; font-size: 10px; color: var(--matrix-green); border-top: 1px solid var(--matrix-green); }
     </style>
@@ -33,46 +39,46 @@
 
 <div id="loginPage">
     <div class="terminal-box">
-        <div style="font-size:14px; color:var(--matrix-green); margin-bottom:15px; font-weight: bold;">PEAKS AUTO :: FIELD FORCE v4.0</div>
+        <div style="font-size:14px; color:var(--matrix-green); margin-bottom:15px; font-weight: bold;">PEAKS AUTO :: FIELD OPS v4.1</div>
         <input id="user" class="hacker-input" placeholder="EMPLOYEE_ID" autocomplete="off">
         <input id="pass" type="password" class="hacker-input" placeholder="ACCESS_TOKEN">
-        <button class="hacker-btn" onclick="startLoginProcess()">Log In & Sync</button>
-        <div id="loginError" style="color: red; font-size: 10px; margin-top: 10px;"></div>
+        <button class="hacker-btn" onclick="startLoginProcess()">Initialize System</button>
+        <div id="loginError" style="color: #ff4141; font-size: 10px; margin-top: 10px;"></div>
     </div>
 </div>
 
 <div id="mainPage">
     <header>
         <span id="welcomeMsg">ID: GUEST</span>
-        <button class="theme-toggle" onclick="toggleTheme()">🌓 THEME</button>
+        <button class="theme-toggle" onclick="toggleTheme()">🌓 MODE</button>
     </header>
 
     <div class="container">
         <div id="liveStats">
-            <div>[MONITORING]: <span id="gpsStatus" style="color:#ff4141">GPS_ACTIVE</span></div>
-            <div>[LOCATION]: <span id="readableAddr" style="color:white">Syncing...</span></div>
+            <div>[MONITORING]: <span id="gpsStatus" style="color:#ff4141">CONNECTING...</span></div>
+            <div>[LOCATION]: <span id="readableAddr" style="color:white">Waiting for Sat-Link...</span></div>
             <div>[COORDS]: <span id="liveCoords" style="color:white">0.000, 0.000</span></div>
         </div>
 
-        <input id="search" placeholder="🔍 Search Customer or Showroom..." onkeyup="searchCustomer()">
+        <input id="search" placeholder="🔍 Search Customer Database..." onkeyup="searchCustomer()">
         
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-            <button class="app-btn btn-green" onclick="saveVisit()">💾 LOG CUSTOMER VISIT</button>
-            <button class="app-btn btn-gold" onclick="exportExcel()">📊 EXPORT FIELD REPORT</button>
+            <button class="app-btn btn-green" onclick="saveVisit()">💾 LOG VISIT</button>
+            <button class="app-btn btn-gold" onclick="exportExcel()">📊 EXPORT CSV</button>
         </div>
         
         <div id="map"></div>
         <div id="list"></div>
     </div>
-    <footer>PROPERTY OF PEAKS AUTO | AUTOMATED GPS LOGGING</footer>
+    <footer>DEVICE SECURED BY PEAKS AUTO GPS ENFORCEMENT</footer>
 </div>
 
 <script>
-    // Matrix BG
+    // --- MATRIX BG ANIMATION ---
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-    const alphabet = "01"; const fontSize = 16;
+    const alphabet = "10"; const fontSize = 16;
     const columns = canvas.width / fontSize;
     const rainDrops = Array.from({ length: columns }).fill(1);
     function drawMatrix() {
@@ -87,12 +93,24 @@
     }
     let matrixInterval = setInterval(drawMatrix, 30);
 
+    // --- APP LOGIC ---
+    let activeUser = "Unknown";
+    let visits = JSON.parse(localStorage.getItem("visits") || "[]");
+    let currentLoc = null;
+    let currentAddress = "Locating...";
+
+    const customerData = [
+        "Customer: Rajesh Kumar | Showroom | Hyderpora",
+        "Customer: Amit Singh | Fleet | Pantha Chowk",
+        "Customer: Zahoor Ahmed | Service | Bemina",
+        "Showroom: Peaks Auto Main | Office | Lasjan"
+    ];
+
     function toggleTheme() {
         const current = document.body.getAttribute('data-theme');
         document.body.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
     }
 
-    let activeUser = "Unknown";
     function startLoginProcess() {
         const u = document.getElementById('user').value.trim();
         const p = document.getElementById('pass').value.trim();
@@ -105,50 +123,68 @@
             load(customerData);
             forceStartTracking();
         } else {
-            document.getElementById('loginError').innerText = "INVALID ACCESS TOKEN";
+            document.getElementById('loginError').innerText = "ACCESS DENIED: INVALID TOKEN";
         }
     }
 
-    // This is where you swap in your customer list later
-    const customerData = [
-        "Sample Customer A | Showroom Prospect | Hyderpora",
-        "Sample Customer B | Fleet Owner | Pantha Chowk",
-        "Sample Customer C | Service Prospect | Bemina"
-    ];
-
-    let visits = JSON.parse(localStorage.getItem("visits") || "[]");
-    let currentLoc = null;
-    let currentAddress = "Locating...";
-
+    // --- HIGH-SPEED GPS ENGINE ---
     function forceStartTracking() {
+        const gpsOptions = { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 };
+
         navigator.geolocation.watchPosition(async (pos) => {
             currentLoc = pos.coords;
-            const lat = pos.coords.latitude; const lng = pos.coords.longitude;
+            const lat = pos.coords.latitude; 
+            const lng = pos.coords.longitude;
+            
+            // 1. Instant Coord Update
             document.getElementById('liveCoords').innerText = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+            document.getElementById('gpsStatus').innerText = "SIGNAL_LOCKED";
+            document.getElementById('gpsStatus').style.color = "#00ff41";
+
+            // 2. Refresh Map
             document.getElementById("map").innerHTML = `<iframe width="100%" height="100%" frameborder="0" src="https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed"></iframe>`;
+
+            // 3. Background Address Fetch
             try {
                 const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`);
                 const data = await res.json();
-                currentAddress = data.display_name || "Address Unknown";
+                currentAddress = data.display_name || "Street Address Syncing...";
                 document.getElementById('readableAddr').innerText = currentAddress;
-            } catch (e) { currentAddress = "Sync Error"; }
-        }, (err) => { alert("ALARM: GPS Required for Peaks Auto Tracking."); }, { enableHighAccuracy: true });
+            } catch (e) {
+                document.getElementById('readableAddr').innerText = "GPS Link Active (Reverse Geocode Delayed)";
+            }
+        }, (err) => {
+            document.getElementById('gpsStatus').innerText = "SYNC_FAILED";
+            document.getElementById('gpsStatus').style.color = "red";
+        }, gpsOptions);
     }
 
     function saveVisit() {
-        if(!currentLoc || currentAddress === "Locating...") return alert("Wait for GPS Signal!");
-        visits.push({ user: activeUser, date: new Date().toLocaleDateString(), time: new Date().toLocaleTimeString(), lat: currentLoc.latitude.toFixed(6), lng: currentLoc.longitude.toFixed(6), addr: currentAddress.replace(/,/g, "") });
+        if(!currentLoc) return alert("System Error: No GPS Signal Detected.");
+        
+        visits.push({
+            employee: activeUser,
+            date: new Date().toLocaleDateString(),
+            time: new Date().toLocaleTimeString(),
+            lat: currentLoc.latitude.toFixed(6),
+            lng: currentLoc.longitude.toFixed(6),
+            addr: currentAddress.replace(/,/g, "") // CSV Safety
+        });
+        
         localStorage.setItem("visits", JSON.stringify(visits));
-        alert("Visit Logged to Peaks Auto Server.");
+        alert("Success: Customer visit logged for " + activeUser);
     }
 
     function exportExcel() {
-        if(visits.length === 0) return alert("No logs recorded.");
-        let csv = "Employee,Date,Time,Latitude,Longitude,Address\n" + visits.map(v => `${v.user},${v.date},${v.time},${v.lat},${v.lng},"${v.addr}"`).join("\n");
+        if(visits.length === 0) return alert("Log is empty. Visit a customer first.");
+        
+        let csv = "Employee,Date,Time,Lat,Lng,Address\n" + 
+                  visits.map(v => `${v.employee},${v.date},${v.time},${v.lat},${v.lng},"${v.addr}"`).join("\n");
+        
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
-        link.download = `Peaks_Field_Report_${activeUser}.csv`;
+        link.download = `PeaksAuto_FieldLog_${activeUser}.csv`;
         link.click();
     }
 
@@ -157,7 +193,7 @@
         listDiv.innerHTML = "";
         list.forEach(item => {
             const parts = item.split('|');
-            listDiv.innerHTML += `<div class="card"><b>${parts[0]}</b><br><small>${parts[1]} - ${parts[2]}</small></div>`;
+            listDiv.innerHTML += `<div class="card"><b>${parts[0]}</b><br><small style="color:#777">${parts[1]} - ${parts[2]}</small></div>`;
         });
     }
 
