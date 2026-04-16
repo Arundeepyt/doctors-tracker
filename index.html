@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peaks Auto | Field Force Tracking v4.1</title>
+    <title>Peaks Auto | Field Force Automation v4.2</title>
     <style>
         :root { --bg: #f4f7f6; --text: #333; --card-bg: #ffffff; --matrix-green: #00ff41; --primary: #003366; --accent: #e31e24; }
         [data-theme='dark'] { --bg: #000800; --text: #00ff41; --card-bg: #001100; --primary: #00ff41; --accent: #008f11; }
@@ -39,17 +39,17 @@
 
 <div id="loginPage">
     <div class="terminal-box">
-        <div style="font-size:14px; color:var(--matrix-green); margin-bottom:15px; font-weight: bold;">PEAKS AUTO :: FIELD OPS v4.1</div>
+        <div style="font-size:14px; color:var(--matrix-green); margin-bottom:15px; font-weight: bold;">PEAKS AUTO :: FIELD FORCE v4.2</div>
         <input id="user" class="hacker-input" placeholder="EMPLOYEE_ID" autocomplete="off">
         <input id="pass" type="password" class="hacker-input" placeholder="ACCESS_TOKEN">
-        <button class="hacker-btn" onclick="startLoginProcess()">Initialize System</button>
+        <button class="hacker-btn" onclick="startLoginProcess()">Bypass & Sync</button>
         <div id="loginError" style="color: #ff4141; font-size: 10px; margin-top: 10px;"></div>
     </div>
 </div>
 
 <div id="mainPage">
     <header>
-        <span id="welcomeMsg">ID: GUEST</span>
+        <span id="welcomeMsg">Staff: GUEST</span>
         <button class="theme-toggle" onclick="toggleTheme()">🌓 MODE</button>
     </header>
 
@@ -60,7 +60,7 @@
             <div>[COORDS]: <span id="liveCoords" style="color:white">0.000, 0.000</span></div>
         </div>
 
-        <input id="search" placeholder="🔍 Search Customer Database..." onkeyup="searchCustomer()">
+        <input id="search" placeholder="🔍 Search Customer or Showroom..." onkeyup="searchCustomer()">
         
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
             <button class="app-btn btn-green" onclick="saveVisit()">💾 LOG VISIT</button>
@@ -74,7 +74,7 @@
 </div>
 
 <script>
-    // --- MATRIX BG ANIMATION ---
+    // --- MATRIX ANIMATION ---
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
@@ -93,17 +93,17 @@
     }
     let matrixInterval = setInterval(drawMatrix, 30);
 
-    // --- APP LOGIC ---
+    // --- APP STATE ---
     let activeUser = "Unknown";
     let visits = JSON.parse(localStorage.getItem("visits") || "[]");
     let currentLoc = null;
-    let currentAddress = "Locating...";
+    let currentAddress = "Syncing Location...";
 
     const customerData = [
         "Customer: Rajesh Kumar | Showroom | Hyderpora",
         "Customer: Amit Singh | Fleet | Pantha Chowk",
         "Customer: Zahoor Ahmed | Service | Bemina",
-        "Showroom: Peaks Auto Main | Office | Lasjan"
+        "Showroom: Peaks Auto Main | Headquarters | Lasjan"
     ];
 
     function toggleTheme() {
@@ -111,11 +111,12 @@
         document.body.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
     }
 
+    // --- LOGIN (NOW FORCES USERNAME PERSISTENCE) ---
     function startLoginProcess() {
         const u = document.getElementById('user').value.trim();
         const p = document.getElementById('pass').value.trim();
         if(u !== "" && p === "1234") {
-            activeUser = u;
+            activeUser = u; // Sets the "User" for the Excel report
             document.getElementById('welcomeMsg').innerText = `Staff: ${u.toUpperCase()}`;
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('canvas').style.display = 'none';
@@ -123,11 +124,11 @@
             load(customerData);
             forceStartTracking();
         } else {
-            document.getElementById('loginError').innerText = "ACCESS DENIED: INVALID TOKEN";
+            document.getElementById('loginError').innerText = "INVALID ACCESS TOKEN";
         }
     }
 
-    // --- HIGH-SPEED GPS ENGINE ---
+    // --- HIGH-SPEED GPS (PREVENTS UNDEFINED) ---
     function forceStartTracking() {
         const gpsOptions = { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 };
 
@@ -136,22 +137,20 @@
             const lat = pos.coords.latitude; 
             const lng = pos.coords.longitude;
             
-            // 1. Instant Coord Update
             document.getElementById('liveCoords').innerText = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
             document.getElementById('gpsStatus').innerText = "SIGNAL_LOCKED";
             document.getElementById('gpsStatus').style.color = "#00ff41";
 
-            // 2. Refresh Map
             document.getElementById("map").innerHTML = `<iframe width="100%" height="100%" frameborder="0" src="https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed"></iframe>`;
 
-            // 3. Background Address Fetch
             try {
                 const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`);
                 const data = await res.json();
-                currentAddress = data.display_name || "Street Address Syncing...";
+                currentAddress = data.display_name || "Street Address Not Available";
                 document.getElementById('readableAddr').innerText = currentAddress;
             } catch (e) {
-                document.getElementById('readableAddr').innerText = "GPS Link Active (Reverse Geocode Delayed)";
+                document.getElementById('readableAddr').innerText = "Link Active (Address Syncing...)";
+                currentAddress = `Area at ${lat.toFixed(3)}, ${lng.toFixed(3)}`;
             }
         }, (err) => {
             document.getElementById('gpsStatus').innerText = "SYNC_FAILED";
@@ -159,32 +158,36 @@
         }, gpsOptions);
     }
 
+    // --- SAVE & EXPORT (NO MORE UNDEFINED) ---
     function saveVisit() {
-        if(!currentLoc) return alert("System Error: No GPS Signal Detected.");
-        
-        visits.push({
+        // Prevent saving if data isn't ready
+        if(!currentLoc) return alert("Error: Waiting for Satellite Lock...");
+        if(activeUser === "Unknown") return alert("Error: Session Expired. Please Log In again.");
+
+        const cleanVisit = {
             employee: activeUser,
             date: new Date().toLocaleDateString(),
             time: new Date().toLocaleTimeString(),
             lat: currentLoc.latitude.toFixed(6),
             lng: currentLoc.longitude.toFixed(6),
-            addr: currentAddress.replace(/,/g, "") // CSV Safety
-        });
+            addr: currentAddress.replace(/,/g, "") // Removes commas to keep CSV columns clean
+        };
         
+        visits.push(cleanVisit);
         localStorage.setItem("visits", JSON.stringify(visits));
-        alert("Success: Customer visit logged for " + activeUser);
+        alert("Visit Logged for " + activeUser);
     }
 
     function exportExcel() {
-        if(visits.length === 0) return alert("Log is empty. Visit a customer first.");
+        if(visits.length === 0) return alert("Log is empty.");
         
-        let csv = "Employee,Date,Time,Lat,Lng,Address\n" + 
+        let csv = "Employee,Date,Time,Latitude,Longitude,Address\n" + 
                   visits.map(v => `${v.employee},${v.date},${v.time},${v.lat},${v.lng},"${v.addr}"`).join("\n");
         
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
-        link.download = `PeaksAuto_FieldLog_${activeUser}.csv`;
+        link.download = `Peaks_Report_${activeUser}.csv`;
         link.click();
     }
 
