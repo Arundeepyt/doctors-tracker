@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peaks Auto | Automation v4.4</title>
+    <title>Peaks Auto | Automation v4.5</title>
     <style>
         :root { 
             --bg: #f4f7f6; --text: #1a1a1a; --card-bg: #ffffff; 
@@ -18,13 +19,11 @@
             margin: 0; padding: 0; width: 100%; height: 100%; 
             font-family: 'Segoe UI', sans-serif; 
             background-color: var(--bg); color: var(--text); 
-            transition: 0.3s; 
+            transition: 0.3s; overflow-x: hidden;
         }
 
-        /* Fixed Background layer */
         #canvas { position: fixed; top: 0; left: 0; z-index: 0; background: #000; }
 
-        /* Login Layer */
         #loginPage { 
             position: relative; z-index: 10; height: 100vh; 
             display: flex; justify-content: center; align-items: center; 
@@ -32,9 +31,9 @@
         .terminal-box { 
             background: rgba(0, 10, 0, 0.9); border: 2px solid var(--matrix-green); 
             padding: 30px; border-radius: 10px; text-align: center; width: 320px;
+            box-shadow: 0 0 20px var(--matrix-green);
         }
 
-        /* Main App Layer - Ensuring it stays above the matrix */
         #mainPage { 
             display: none; position: relative; z-index: 10; 
             min-height: 100vh; background-color: var(--bg);
@@ -43,9 +42,10 @@
         header { 
             padding: 15px; background: var(--primary); color: white; 
             display: flex; justify-content: space-between; align-items: center; 
+            position: sticky; top: 0; z-index: 100;
         }
 
-        .container { padding: 20px; max-width: 800px; margin: auto; }
+        .container { padding: 20px; max-width: 800px; margin: auto; padding-bottom: 80px; }
 
         #liveStats { 
             background: #000; color: var(--matrix-green); padding: 15px; 
@@ -60,14 +60,20 @@
         .btn-green:disabled { background: #444; cursor: not-allowed; }
         .btn-gold { background: #ffc107; color: #000; }
 
-        #map { 
-            height: 300px; border-radius: 10px; border: 2px solid var(--primary); 
-            margin: 20px 0; background: #222; overflow: hidden;
+        #map { height: 250px; border-radius: 10px; border: 2px solid var(--primary); margin: 20px 0; background: #222; }
+
+        /* DATABASE LIST STYLE */
+        .db-header { margin: 20px 0 10px; font-weight: bold; border-bottom: 2px solid var(--accent); padding-bottom: 5px; }
+        .card { 
+            background: var(--card-bg); padding: 15px; border-radius: 10px; 
+            margin-bottom: 10px; border-left: 5px solid var(--primary);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        .theme-btn { 
-            padding: 5px 15px; border-radius: 5px; border: 1px solid #fff; 
-            background: transparent; color: #fff; cursor: pointer; 
+        footer { 
+            position: fixed; bottom: 0; width: 100%; background: #000; 
+            color: var(--matrix-green); text-align: center; padding: 10px; 
+            font-size: 10px; font-family: monospace; border-top: 1px solid var(--matrix-green);
         }
     </style>
 </head>
@@ -77,43 +83,56 @@
 
 <div id="loginPage">
     <div class="terminal-box">
-        <h3 style="color: var(--matrix-green);">PEAKS AUTO v4.4</h3>
-        <input id="user" type="text" style="width:100%; padding:10px; margin:10px 0;" placeholder="EMPLOYEE_ID">
-        <input id="pass" type="password" style="width:100%; padding:10px; margin:10px 0;" placeholder="ACCESS_TOKEN">
-        <button class="hacker-btn" style="width:100%; padding:12px; background:var(--matrix-green); color:#000; border:none; cursor:pointer;" onclick="startLogin()">SYNC SYSTEM</button>
+        <h3 style="color: var(--matrix-green);">PEAKS AUTO v4.5</h3>
+        <input id="user" type="text" style="width:90%; padding:10px; margin:10px 0;" placeholder="EMPLOYEE_ID">
+        <input id="pass" type="password" style="width:90%; padding:10px; margin:10px 0;" placeholder="ACCESS_TOKEN">
+        <button onclick="startLogin()" style="width:95%; padding:12px; background:var(--matrix-green); border:none; font-weight:bold; cursor:pointer;">BOOT SYSTEM</button>
     </div>
 </div>
 
 <div id="mainPage">
     <header>
         <span id="welcome">Staff: GUEST</span>
-        <button class="theme-btn" onclick="toggleMode()">🌓 THEME</button>
+        <button onclick="toggleMode()" style="background:transparent; color:white; border:1px solid white; padding:5px; border-radius:5px; cursor:pointer;">THEME</button>
     </header>
 
     <div class="container">
         <div id="liveStats">
-            <div>[STATUS]: <span id="status" style="color:red">OFFLINE</span></div>
-            <div>[STREET]: <span id="addr" style="color:white">Waiting for GPS...</span></div>
+            <div>[MONITOR]: <span id="status" style="color:red">CONNECTING...</span></div>
+            <div>[CURRENT]: <span id="addr" style="color:white">Syncing Satellites...</span></div>
         </div>
 
-        <div style="display: flex; gap: 15px;">
+        <div style="display: flex; gap: 10px;">
             <button id="logBtn" class="app-btn btn-green" onclick="doLog()" disabled>WAITING FOR GPS</button>
-            <button class="app-btn btn-gold" onclick="doExport()">DOWNLOAD CSV</button>
+            <button class="app-btn btn-gold" onclick="doExport()">📊 EXCEL REPORT</button>
         </div>
 
         <div id="map"></div>
+
+        <div class="db-header">TARGET DATABASE (SPECIALISTS)</div>
+        <div id="customerList"></div>
     </div>
+
+    <footer>PROPERTY OF PEAKS AUTO | ENCRYPTED GPS TRACKING ACTIVE</footer>
 </div>
 
 <script>
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     let user = "Unknown";
-    let logs = JSON.parse(localStorage.getItem("peaks_logs") || "[]");
+    let logs = JSON.parse(localStorage.getItem("peaks_final_logs") || "[]");
     let currentPos = null;
     let currentAddr = null;
 
-    // Matrix effect
+    // Database of People
+    const peopleData = [
+        { name: "Dr. Sameer | Orthopedic", loc: "Bone & Joint Hospital" },
+        { name: "Dr. Farhana | Cardiologist", loc: "Super Specialty" },
+        { name: "Dr. Nasir | Neurologist", loc: "SKIMS Soura" },
+        { name: "Peaks Auto Showroom", loc: "Main Headquarters" }
+    ];
+
+    // Matrix
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
     const drops = Array(Math.floor(canvas.width/16)).fill(1);
     function matrix() {
@@ -128,8 +147,8 @@
     setInterval(matrix, 35);
 
     function toggleMode() {
-        const body = document.body;
-        body.setAttribute('data-theme', body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        const b = document.body;
+        b.setAttribute('data-theme', b.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
     }
 
     function startLogin() {
@@ -140,26 +159,34 @@
             document.getElementById('welcome').innerText = "Staff: " + u.toUpperCase();
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('mainPage').style.display = 'block';
+            renderList();
             initGPS();
         }
+    }
+
+    function renderList() {
+        const listDiv = document.getElementById('customerList');
+        listDiv.innerHTML = peopleData.map(p => `
+            <div class="card">
+                <strong>${p.name}</strong><br>
+                <small style="color:#666">${p.loc}</small>
+            </div>
+        `).join('');
     }
 
     function initGPS() {
         navigator.geolocation.watchPosition(async (p) => {
             currentPos = p.coords;
-            const lat = p.coords.latitude; const lng = p.coords.longitude;
             document.getElementById('status').innerText = "SIGNAL_LOCKED";
             document.getElementById('status').style.color = "#00ff41";
-            document.getElementById('map').innerHTML = `<iframe width="100%" height="100%" frameborder="0" src="https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed"></iframe>`;
+            document.getElementById('map').innerHTML = `<iframe width="100%" height="100%" frameborder="0" src="https://maps.google.com/maps?q=${p.coords.latitude},${p.coords.longitude}&z=15&output=embed"></iframe>`;
 
-            try {
-                const r = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
-                const d = await r.json();
-                currentAddr = d.display_name || "Srinagar Area";
-                document.getElementById('addr').innerText = currentAddr;
-                document.getElementById('logBtn').disabled = false;
-                document.getElementById('logBtn').innerText = "💾 LOG VISIT";
-            } catch(e) {}
+            const r = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${p.coords.latitude}&lon=${p.coords.longitude}`);
+            const d = await r.json();
+            currentAddr = d.display_name || "Srinagar";
+            document.getElementById('addr').innerText = currentAddr;
+            document.getElementById('logBtn').disabled = false;
+            document.getElementById('logBtn').innerText = "💾 LOG VISIT";
         }, null, {enableHighAccuracy: true});
     }
 
@@ -168,21 +195,23 @@
             staff: user,
             date: new Date().toLocaleDateString(),
             time: new Date().toLocaleTimeString(),
-            lat: currentPos.latitude,
-            lng: currentPos.longitude,
+            lat: currentPos.latitude.toFixed(5),
+            lng: currentPos.longitude.toFixed(5),
             addr: currentAddr.replace(/,/g, "")
         });
-        localStorage.setItem("peaks_logs", JSON.stringify(logs));
-        alert("Visit Logged for " + user);
+        localStorage.setItem("peaks_final_logs", JSON.stringify(logs));
+        alert("Success: Verified Visit Saved.");
     }
 
     function doExport() {
-        let csv = "Employee,Date,Time,Lat,Lng,Address\n" + 
-            logs.map(l => `${l.staff},${l.date},${l.time},${l.lat},${l.lng},"${l.addr}"`).join("\n");
+        if(logs.length === 0) return alert("Log some visits first!");
+        // The "Excel Fix": Adding quotes around fields helps prevent formatting errors
+        let csv = "Employee,Date,Time,Latitude,Longitude,Full Address\n" + 
+            logs.map(l => `"${l.staff}","${l.date}","${l.time}",${l.lat},${l.lng},"${l.addr}"`).join("\n");
         const blob = new Blob([csv], {type: 'text/csv'});
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = `Report_${user}.csv`;
+        a.download = `PeaksReport_${user}.csv`;
         a.click();
     }
 </script>
