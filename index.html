@@ -3,28 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arundeep Enterprise | Secure Field Ops</title>
+    <title>Arundeep Systems | Enterprise Tracker v3.1</title>
     <style>
-        :root { --bg: #f4f7f6; --text: #333; --card-bg: #ffffff; --matrix-green: #00ff41; --primary: #1d2671; --accent: #00c6ff; }
-        [data-theme='dark'] { --bg: #000800; --text: #00ff41; --card-bg: #001100; --primary: #00ff41; --accent: #008f11; }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Segoe UI', sans-serif; background-color: var(--bg); color: var(--text); transition: 0.3s; }
+        :root {
+            --bg: #f4f7f6;
+            --text: #333;
+            --card-bg: #ffffff;
+            --matrix-green: #00ff41;
+            --primary: #1d2671;
+            --accent: #00c6ff;
+        }
+
+        [data-theme='dark'] {
+            --bg: #000800;
+            --text: #00ff41;
+            --card-bg: #001100;
+            --primary: #00ff41;
+            --accent: #008f11;
+        }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            transition: 0.3s;
+            overflow-x: hidden;
+        }
+
         #canvas { position: fixed; top: 0; left: 0; z-index: 1; background: #000; }
-        #loginPage { position: relative; z-index: 10; height: 100vh; display: flex; justify-content: center; align-items: center; }
-        .terminal-box { background: rgba(0, 10, 0, 0.95); border: 2px solid var(--matrix-green); box-shadow: 0 0 25px var(--matrix-green); width: 90%; max-width: 400px; padding: 30px; border-radius: 5px; }
-        .hacker-input { width: 100%; background: transparent; border: 1px solid var(--matrix-green); color: var(--matrix-green); padding: 12px; margin: 10px 0; outline: none; box-sizing: border-box;}
-        .hacker-btn { width: 100%; background: var(--matrix-green); color: black; border: none; padding: 15px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        #mainPage { display: none; position: relative; z-index: 20; padding-bottom: 80px; }
-        header { padding: 15px; text-align: center; font-weight: bold; background: var(--primary); color: white; display: flex; justify-content: space-between; align-items: center; }
-        .container { padding: 15px; max-width: 600px; margin: auto; }
-        .theme-toggle { background: rgba(255,255,255,0.2); border: 1px solid white; color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; }
-        #liveStats { background: #000; color: var(--matrix-green); padding: 12px; border-radius: 8px; font-size: 11px; margin-bottom: 15px; border: 1px solid #333; }
-        .card { background: var(--card-bg); padding: 15px; border-radius: 12px; margin-bottom: 12px; border-left: 6px solid var(--accent); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .app-btn { width: 100%; padding: 15px; margin: 8px 0; border: none; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; color: white; }
+
+        /* --- LOGIN PAGE --- */
+        #loginPage {
+            position: relative; z-index: 10;
+            height: 100vh; display: flex; justify-content: center; align-items: center;
+        }
+
+        .terminal-box {
+            background: rgba(0, 10, 0, 0.95);
+            border: 2px solid var(--matrix-green);
+            box-shadow: 0 0 25px var(--matrix-green);
+            width: 90%; max-width: 400px;
+            padding: 30px; border-radius: 10px;
+            text-align: center;
+        }
+
+        .hacker-input {
+            width: 100%; background: transparent; border: 1px solid var(--matrix-green);
+            color: var(--matrix-green); padding: 12px; margin: 10px 0;
+            outline: none; font-family: 'Courier New', monospace; box-sizing: border-box;
+        }
+
+        .hacker-btn {
+            width: 100%; background: var(--matrix-green); color: black;
+            border: none; padding: 15px; font-weight: bold; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 2px; margin-top: 10px;
+        }
+
+        /* --- MAIN APP UI --- */
+        #mainPage { display: none; position: relative; z-index: 20; }
+
+        header {
+            padding: 15px; text-align: center; font-weight: bold;
+            background: var(--primary); color: white;
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 30;
+        }
+
+        .container { padding: 15px; max-width: 600px; margin: auto; padding-bottom: 100px; }
+
+        .theme-toggle {
+            background: rgba(255,255,255,0.2); border: 1px solid white; color: white;
+            padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 11px;
+        }
+
+        #liveStats {
+            background: #000; color: var(--matrix-green); padding: 12px;
+            border-radius: 8px; font-size: 11px; margin-bottom: 15px;
+            border: 1px solid #333; line-height: 1.6;
+            font-family: 'Courier New', monospace;
+        }
+
+        .card {
+            background: var(--card-bg); padding: 15px; border-radius: 12px; margin-bottom: 12px;
+            border-left: 6px solid var(--accent); box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .app-btn {
+            width: 100%; padding: 15px; margin: 8px 0; border: none; border-radius: 10px;
+            font-size: 15px; font-weight: bold; cursor: pointer; color: white;
+            transition: 0.2s;
+        }
+
         .btn-green { background: #28a745; }
         .btn-gold { background: #ffc107; color: #000; }
+        
         #map { height: 250px; border-radius: 12px; margin: 15px 0; background: #333; overflow: hidden; border: 2px solid var(--primary); }
-        #search { width: 100%; padding: 15px; border-radius: 10px; border: 1px solid #ccc; margin-bottom: 15px; box-sizing: border-box;}
-        footer { position: fixed; bottom: 0; width: 100%; background: #000; text-align: center; padding: 10px; font-size: 10px; color: var(--matrix-green); }
+        
+        #search { 
+            width: 100%; padding: 15px; border-radius: 10px; 
+            border: 1px solid #ccc; margin-bottom: 15px; 
+            box-sizing: border-box; font-size: 16px;
+        }
+
+        footer { 
+            position: fixed; bottom: 0; width: 100%; background: #000; 
+            text-align: center; padding: 10px; font-size: 10px; 
+            color: var(--matrix-green); border-top: 1px solid var(--matrix-green);
+        }
     </style>
 </head>
 <body>
@@ -33,27 +119,28 @@
 
 <div id="loginPage">
     <div class="terminal-box">
-        <div style="font-size:12px; color:var(--matrix-green); margin-bottom:10px;">PEAKS_AUTO :: SECURE_AUTH</div>
-        <input id="user" class="hacker-input" placeholder="USERNAME" autocomplete="off">
-        <input id="pass" type="password" class="hacker-input" placeholder="AUTH_KEY">
-        <button class="hacker-btn" onclick="startLoginProcess()">Log In</button>
+        <div style="font-size:14px; color:var(--matrix-green); margin-bottom:15px; font-weight: bold;">PEAKS_AUTO SYSTEMS v3.1</div>
+        <input id="user" class="hacker-input" placeholder="USER_NAME" autocomplete="off">
+        <input id="pass" type="password" class="hacker-input" placeholder="ACCESS_TOKEN">
+        <button class="hacker-btn" onclick="startLoginProcess()">Bypass & Sync</button>
+        <div id="loginError" style="color: red; font-size: 10px; margin-top: 10px;"></div>
     </div>
 </div>
 
 <div id="mainPage">
     <header>
-        <span id="welcomeMsg">User: Guest</span>
-        <button class="theme-toggle" onclick="toggleTheme()">🌓 Toggle Mode</button>
+        <span id="welcomeMsg">ID: GUEST</span>
+        <button class="theme-toggle" onclick="toggleTheme()">🌓 THEME</button>
     </header>
 
     <div class="container">
         <div id="liveStats">
             <div>[MONITORING]: <span id="gpsStatus" style="color:#ff4141">FORCED_ACTIVE</span></div>
-            <div>[ADDRESS]: <span id="readableAddr" style="color:white">Locating street...</span></div>
+            <div>[ADDRESS]: <span id="readableAddr" style="color:white">Syncing with satellite...</span></div>
             <div>[COORDS]: <span id="liveCoords" style="color:white">0.000, 0.000</span></div>
         </div>
 
-        <input id="search" placeholder="🔍 Search Doctors..." onkeyup="searchDoctor()">
+        <input id="search" placeholder="🔍 Search Doctor Name or Area..." onkeyup="searchDoctor()">
         
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
             <button class="app-btn btn-green" onclick="saveVisit()">💾 LOG VISIT</button>
@@ -63,15 +150,15 @@
         <div id="map"></div>
         <div id="list"></div>
     </div>
-    <footer>COMPANY CONTROLLED DEVICE | ENCRYPTED LINK</footer>
+    <footer>COMPANY CONTROLLED DEVICE // ENCRYPTED_TRACKING_ON</footer>
 </div>
 
 <script>
-    // Matrix BG remains same...
+    // --- 1. MATRIX BACKGROUND ---
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-    const alphabet = "010101"; const fontSize = 16;
+    const alphabet = "01"; const fontSize = 16;
     const columns = canvas.width / fontSize;
     const rainDrops = Array.from({ length: columns }).fill(1);
     function drawMatrix() {
@@ -86,82 +173,100 @@
     }
     let matrixInterval = setInterval(drawMatrix, 30);
 
+    // --- 2. THEME TOGGLE ---
     function toggleTheme() {
         const current = document.body.getAttribute('data-theme');
         document.body.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
     }
 
+    // --- 3. LOGIN & AUTO-TRACKING ---
     let activeUser = "Unknown";
     function startLoginProcess() {
-        const u = document.getElementById('user').value;
-        const p = document.getElementById('pass').value;
+        const u = document.getElementById('user').value.trim();
+        const p = document.getElementById('pass').value.trim();
+        
         if(u !== "" && p === "1234") {
-            activeUser = u; // Set the global user
-            document.getElementById('welcomeMsg').innerText = User: ${u.toUpperCase()};
+            activeUser = u;
+            document.getElementById('welcomeMsg').innerText = `ID: ${u.toUpperCase()}`;
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('canvas').style.display = 'none';
             document.getElementById('mainPage').style.display = 'block';
+            
             load(doctorData);
-            forceStartTracking();
-        } else { alert("INVALID CREDENTIALS"); }
+            forceStartTracking(); // Forced Google Maps Open
+        } else {
+            document.getElementById('loginError').innerText = "INVALID ACCESS TOKEN";
+        }
     }
 
+    // --- 4. DATASET ---
     const doctorData = [
         "Khalid . Wani | MD INTERNAL MEDICINE | SRINAGAR",
         "MOHSIN BIN MUSHTAQ | MD INTERNAL MEDICINE | SRINAGAR",
-        "Manzoor Ahmad Chalkoo | DNB UROLOGY | SRINAGAR"
+        "Manzoor Ahmad Chalkoo | DNB UROLOGY | SRINAGAR",
+        "Mohd Ashraf Lone | DNB GEN SURGERY | SRINAGAR",
+        "Nisar Ahmad Shah | MBBS MS | SRINAGAR",
+        "Shahzada . Parray | MD INTERNAL MEDICINE | SRINAGAR"
     ];
 
     let visits = JSON.parse(localStorage.getItem("visits") || "[]");
     let currentLoc = null;
     let currentAddress = "Locating...";
 
+    // --- 5. GPS ENGINE ---
     function forceStartTracking() {
         navigator.geolocation.watchPosition(async (pos) => {
             currentLoc = pos.coords;
-            const { latitude: lat, longitude: lng } = pos.coords;
-            document.getElementById('liveCoords').innerText = ${lat.toFixed(5)}, ${lng.toFixed(5)};
-            document.getElementById("map").innerHTML = <iframe width="100%" height="100%" frameborder="0" src="https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed"></iframe>;
+            const lat = pos.coords.latitude; 
+            const lng = pos.coords.longitude;
+            
+            document.getElementById('liveCoords').innerText = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+            
+            // Auto-load Google Maps frame
+            document.getElementById("map").innerHTML = `<iframe width="100%" height="100%" frameborder="0" src="https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed"></iframe>`;
 
             try {
-                const res = await fetch(https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng});
+                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`);
                 const data = await res.json();
-                currentAddress = data.display_name || "Unknown Area";
+                currentAddress = data.display_name || "Street Address Not Available";
                 document.getElementById('readableAddr').innerText = currentAddress;
-            } catch (e) { currentAddress = "Search Error"; }
-        }, null, { enableHighAccuracy: true });
+            } catch (e) { currentAddress = "Sync Error"; }
+        }, (err) => {
+            alert("ALARM: GPS must be turned ON for this company app to work.");
+        }, { enableHighAccuracy: true });
     }
 
+    // --- 6. LOGGING & EXCEL ---
     function saveVisit() {
-        if(!currentLoc || currentAddress === "Locating...") return alert("Please wait for GPS signal!");
-        visits.push({
+        if(!currentLoc || currentAddress === "Locating...") return alert("Wait for GPS Signal!");
+        
+        const newVisit = {
             user: activeUser,
             date: new Date().toLocaleDateString(),
             time: new Date().toLocaleTimeString(),
             lat: currentLoc.latitude.toFixed(6),
             lng: currentLoc.longitude.toFixed(6),
-            addr: currentAddress.replace(/,/g, "") // Remove commas so they don't break Excel columns
-        });
+            addr: currentAddress.replace(/,/g, "") // Clean address for Excel
+        };
+        
+        visits.push(newVisit);
         localStorage.setItem("visits", JSON.stringify(visits));
-        alert("Visit Logged for " + activeUser);
+        alert("Encrypted Log Saved for " + activeUser);
     }
 
     function exportExcel() {
-        if(visits.length === 0) return alert("No logs to export.");
-        // The header row
-        let csvContent = "User,Date,Time,Latitude,Longitude,Address\n";
+        if(visits.length === 0) return alert("No data to export.");
         
-        // Loop through data and build clean rows
+        let csvContent = "User,Date,Time,Latitude,Longitude,Address\n";
         visits.forEach(v => {
-            csvContent += ${v.user},${v.date},${v.time},${v.lat},${v.lng},${v.addr}\n;
+            csvContent += `${v.user},${v.date},${v.time},${v.lat},${v.lng},${v.addr}\n`;
         });
 
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement("a");
         const url = URL.createObjectURL(blob);
         link.setAttribute("href", url);
-        link.setAttribute("download", Field_Report_${activeUser}.csv);
-        link.style.visibility = 'hidden';
+        link.setAttribute("download", `Peaks_Report_${activeUser}.csv`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -172,7 +277,11 @@
         listDiv.innerHTML = "";
         list.forEach(item => {
             const parts = item.split('|');
-            listDiv.innerHTML += <div class="card"><span style="font-weight:bold">${parts[0]}</span><br><small>${parts[1]}</small></div>;
+            listDiv.innerHTML += `
+                <div class="card">
+                    <span style="font-weight:bold; color:var(--primary); font-size:16px;">${parts[0]}</span><br>
+                    <small style="color:#666">${parts[1]} - ${parts[2]}</small>
+                </div>`;
         });
     }
 
